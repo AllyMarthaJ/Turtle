@@ -1,6 +1,8 @@
 ﻿using System;
 namespace Turtle.Generators {
 	public interface IGenerator {
+		public int MaxTurns { get; }
+
 		public KeyboardRow[] KeyboardRows { get; }
 
 		/// <summary>
@@ -11,7 +13,7 @@ namespace Turtle.Generators {
 		/// </summary>
 		/// <param name="currentInput">The most recently entered input</param>
 		/// <returns>Returns all hints, 0 if invalid input.</returns>
-		public CharHint[] ValidateInput (string currentInput);
+		public bool ValidateInput (string currentInput);
 
 		public string GenerateSolution (int seed);
 	}
