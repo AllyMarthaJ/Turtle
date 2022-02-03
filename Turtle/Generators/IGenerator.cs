@@ -11,9 +11,9 @@ namespace Turtle.Generators {
 		/// </summary>
 		/// <param name="currentInput">The most recently entered input</param>
 		/// <returns>Returns all hints, 0 if invalid input.</returns>
-		public Dictionary<int, HintMode> ValidateInput (string currentInput);
+		public CharHint[] ValidateInput (string currentInput);
 
-		public string GenerateSolution (long seed);
+		public string GenerateSolution (int seed);
 	}
 }
 
