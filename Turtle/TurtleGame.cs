@@ -3,8 +3,7 @@ using Turtle.Generators;
 
 namespace Turtle {
 	public class TurtleGame {
-		private IGenerator currentGenerator;
-		private Random rnd;
+		private readonly IGenerator currentGenerator;
 
 		public int Seed { get; }
 
@@ -24,7 +23,6 @@ namespace Turtle {
 		public TurtleGame (IGenerator generator, int seed, bool hard = false)
 		{
 			this.currentGenerator = generator;
-			this.rnd = new Random (seed);
 
 			this.Seed = seed;
 			this.Solution = this.currentGenerator.GenerateSolution (seed);
@@ -37,38 +35,92 @@ namespace Turtle {
 
 		public HintMode [] ValidateAndUpdateUpstream (string input)
 		{
-			var hintResponse = this.currentGenerator.ValidateInput (input);
-
-			if (hintResponse.Length == 0) {
+			// length validation
+			if (input.Length != this.Solution.Length) {
 				return Array.Empty<HintMode> ();
 			}
 
-			if (this.HardMode) {
-				for (int i = 0; i < hintResponse.Length; i++) {
-					if (this.GoodPositions [i] != hintResponse [i].Entry)
-						return Array.Empty<HintMode> ();
-					if (this.NeverContain.Contains (hintResponse [i].Entry))
-						return Array.Empty<HintMode> ();
-				}
+			// generator input validation
+			if (!this.currentGenerator.ValidateInput(input)) {
+				return Array.Empty<HintMode> ();
+			}
 
-				for (int i = 0; i < hintResponse.Length; i++) {
-					switch (hintResponse [i].Hint) {
-					case HintMode.BadCharacter:
-						if (!this.NeverContain.Contains (hintResponse [i].Entry))
-							this.NeverContain.Add (hintResponse [i].Entry);
-						break;
-					case HintMode.BadPosition:
-						if (!this.MustContain.Contains (hintResponse [i].Entry))
-							this.MustContain.Add (hintResponse [i].Entry);
-						break;
-					case HintMode.GoodPosition:
-						this.GoodPositions [i] = hintResponse [i].Entry;
-						break;
-					}
+			var hints = this.CompareUpstream (input);
+
+			// hardmode validation
+			if (this.HardMode && !UpdateWithHardmode (input, hints)) {
+				return Array.Empty<HintMode> ();
+			}
+
+			return hints.Select (e => e.Hint).ToArray ();
+		}
+
+		public CharHint [] CompareUpstream (string input)
+		{
+			if (input.Length != Solution.Length) {
+				return Array.Empty<CharHint> ();
+			}
+
+			// a position-insensitive copy of our solution
+			var deductSolution = new List<char> (this.Solution);
+
+			// a position-sensitive record of our hints
+			var hints = new CharHint [this.Solution.Length];
+
+			for (int i = 0; i < input.Length; i++) {
+				if (this.Solution [i] == input [i] && deductSolution.Contains(input[i])) {
+					// 1. check equal position
+					// 2. going from left-to-right means we might have already
+					// used a letter but in the wrong place, so we don't want to give the impression
+					// of duplicate letters. ensure we haven't used our letter already
+					hints [i] = new CharHint (input [i], HintMode.GoodPosition);
+					deductSolution.Remove (input [i]);
+				} else if (deductSolution.Contains (input [i])) {
+					// our position-insensitive solution contains it, but
+					// it's not in the right position (covered by previous case)
+					hints [i] = new CharHint (input [i], HintMode.BadPosition);
+					deductSolution.Remove (input [i]);
+				} else {
+					// we don't know what this is at all!
+					hints [i] = new CharHint (input [i], HintMode.BadCharacter);
 				}
 			}
 
-			return hintResponse.Select (e => e.Hint).ToArray();
+			return hints;
+		}
+
+		public bool UpdateWithHardmode(string input, CharHint[] hints)
+		{
+			// validation on hardmode
+			for (int i = 0; i < hints.Length; i++) {
+				if (this.GoodPositions [i] != hints [i].Entry)
+					return false;
+				if (this.NeverContain.Contains (hints [i].Entry))
+					return false;
+				foreach (var l in this.Solution) {
+					if (!input.Contains (l))
+						return false;
+				}
+			}
+
+			// updating our tracked records with hardmode
+			for (int i = 0; i < hints.Length; i++) {
+				switch (hints [i].Hint) {
+				case HintMode.BadCharacter:
+					if (!this.NeverContain.Contains (hints [i].Entry))
+						this.NeverContain.Add (hints [i].Entry);
+					break;
+				case HintMode.BadPosition:
+					if (!this.MustContain.Contains (hints [i].Entry))
+						this.MustContain.Add (hints [i].Entry);
+					break;
+				case HintMode.GoodPosition:
+					this.GoodPositions [i] = hints [i].Entry;
+					break;
+				}
+			}
+
+			return true;
 		}
 	}
 }
