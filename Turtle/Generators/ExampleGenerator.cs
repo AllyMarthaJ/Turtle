@@ -4,7 +4,13 @@ namespace Turtle.Generators {
 		private string [] exampleWords = new [] {
 			"hello",
 			"world",
-			"seven"
+			"seven",
+			"eeeee",
+			"twice",
+			"maths",
+			"games",
+			"spice",
+			"cutie"
 		};
 
 		public ExampleGenerator ()

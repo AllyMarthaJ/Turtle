@@ -14,7 +14,6 @@ namespace Turtle {
 		// gamestate
 		public char [] GoodPositions { get; }
 		public List<char> MustContain { get; }
-		public List<char> NeverContain { get; }
 
 		public TurtleGame (IGenerator generator, bool hard = false) :
 			this (generator, (DateTime.UtcNow - DateTime.UnixEpoch).Milliseconds, hard)
@@ -30,7 +29,6 @@ namespace Turtle {
 
 			this.GoodPositions = new char [this.Solution.Length];
 			this.MustContain = new List<char> ();
-			this.NeverContain = new List<char> ();
 		}
 
 		public HintMode [] ValidateAndUpdateUpstream (string input)
@@ -92,12 +90,13 @@ namespace Turtle {
 		public bool UpdateWithHardmode(string input, CharHint[] hints)
 		{
 			// validation on hardmode
+			// NOTE: **we used to have an equivalent deny list**
+			// reasons we don't do this: tracking duplicate letters, tracking duplicate inputs.
 			for (int i = 0; i < hints.Length; i++) {
-				if (this.GoodPositions [i] != hints [i].Entry)
+				if (this.GoodPositions[i] != '\0' && this.GoodPositions [i] != hints [i].Entry)
 					return false;
-				if (this.NeverContain.Contains (hints [i].Entry))
-					return false;
-				foreach (var l in this.Solution) {
+
+				foreach (var l in this.MustContain) {
 					if (!input.Contains (l))
 						return false;
 				}
@@ -106,10 +105,6 @@ namespace Turtle {
 			// updating our tracked records with hardmode
 			for (int i = 0; i < hints.Length; i++) {
 				switch (hints [i].Hint) {
-				case HintMode.BadCharacter:
-					if (!this.NeverContain.Contains (hints [i].Entry))
-						this.NeverContain.Add (hints [i].Entry);
-					break;
 				case HintMode.BadPosition:
 					if (!this.MustContain.Contains (hints [i].Entry))
 						this.MustContain.Add (hints [i].Entry);

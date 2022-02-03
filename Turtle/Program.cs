@@ -8,7 +8,7 @@ public class Program {
 		var turns = 1;
 		var gen = new ExampleGenerator ();
 		var game = new TurtleGame (gen);
-
+		game.HardMode = true;
 		var bc = Console.BackgroundColor;
 		//var fc = Console.ForegroundColor;
 		Console.WriteLine (game.Solution);
