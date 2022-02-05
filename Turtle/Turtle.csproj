@@ -9,8 +9,10 @@
 
   <ItemGroup>
     <None Remove="Generators\" />
+    <None Remove="Graphics\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Generators\" />
+    <Folder Include="Graphics\" />
   </ItemGroup>
 </Project>
