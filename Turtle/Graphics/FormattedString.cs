@@ -20,7 +20,6 @@ namespace Turtle.Graphics
 
 		public static implicit operator string(FormattedString s)
 		{
-			// TODO
 			StringBuilder sb = new ();
 
 			foreach (var line in s.RawValue.Split (Environment.NewLine)) {

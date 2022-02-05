@@ -6,14 +6,18 @@ using Turtle.Graphics;
 public class Program {
 	public static void Main (string [] args)
 	{
-		var format = new Format ();
-		format.Bold = true;
-		format.Italic = true;
-		format.Underline = true;
-		format.BackgroundColor = new Color (TerminalMode.Background, 5, 0, 5, false);
-		format.ForegroundColor = new Color (TerminalMode.Foreground, ColorName.BrightGreen);
+		//var format = new Format ();
+		//format.Bold = true;
+		//format.Italic = true;
+		//format.Underline = true;
+		//format.BackgroundColor = new Color (TerminalMode.Background, 5, 0, 5, false);
+		//format.ForegroundColor = new Color (TerminalMode.Foreground, ColorName.BrightGreen);
+
+		var format = new Format (backgroundColor: new Color (TerminalMode.Background, 40, 200, 120, true),
+					 bold: true);
+
 		FormattedString fmtString = "Hello, world";
-		fmtString.Formats.Add (new Regex (".*"), format);
+		fmtString.Formats.Add (new Regex ("Hello"), format);
 		Console.WriteLine (fmtString);
 
 		return;
