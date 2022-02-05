@@ -14,21 +14,19 @@ namespace Turtle.Graphics {
 		{
 			StringBuilder sb = new ();
 
-			if (this.BackgroundColor != null) {
-				sb.Append (this.BackgroundColor);
-			}
+			if (this.BackgroundColor != null) sb.Append (this.BackgroundColor);
+			if (this.ForegroundColor != null) sb.Append (this.ForegroundColor);
+			if (this.Bold) sb.Append ("1;");
+			if (this.Italic) sb.Append ("3;");
+			if (this.Underline) sb.Append ("4;");
 
-			if (this.ForegroundColor.HasValue) {
-				sb.Append (this.ForegroundColor);
+			if (sb.Length == 0) {
+				sb.Append ("0;");
 			}
-
-			if (this.Bold) {
-				sb.Append ("1;");
-			}
-
-			if (this.Italic) {
-				sb.Append ("3;");
-			}
+			
+			sb.Remove (sb.Length - 1, 1);
+			sb.Append ('m');
+			return sb;
 		}
 	}
 	//colorizor9000("Bunny is always right", color: LegacyColor(3))
@@ -55,11 +53,29 @@ namespace Turtle.Graphics {
 			}
 		}
 
-		public Color(ColorMode mode, TerminalMode termMode, ColorName legacyColorName)
+		public Color(TerminalMode termMode, ColorName legacyColorName)
 		{
-			this.Mode = mode;
+			this.Mode = ColorMode.Legacy16;
 			this.TerminalMode = termMode;
-			this.BasicValue = (int)legacyColorName;
+			this.basicValue = (int)legacyColorName;
+		}
+
+		public Color(TerminalMode termMode, int r, int g, int b, bool isTrueColor = true)
+		{
+			this.Mode = isTrueColor? ColorMode.TrueColor : ColorMode.Rgb6bit;
+			this.TerminalMode = termMode;
+
+			this.R = r;
+			this.G = g;
+			this.B = b;
+		}
+
+		public Color(TerminalMode termMode, int grayscale)
+		{
+			this.Mode = ColorMode.Grayscale;
+			this.TerminalMode = termMode;
+
+			this.basicValue = grayscale;
 		}
 
 
@@ -73,15 +89,14 @@ namespace Turtle.Graphics {
 
 			switch (this.Mode) {
 			case ColorMode.Legacy16:
-				return String.Format ("{0}8;5;{1};", this.TerminalMode, this.basicValue);
+				return String.Format ("{0}8;5;{1};", (int)this.TerminalMode, this.BasicValue);
 			case ColorMode.Rgb6bit:
 				code = 36 * this.R + 6 * this.G + this.B + 16;
-				return String.Format ("{0}8;5;{0};", this.TerminalMode, code);
+				return String.Format ("{0}8;5;{1};", (int)this.TerminalMode, code);
 			case ColorMode.Grayscale:
-				code = this.basicValue + this.getOffset ();
-				return String.Format ("{0}8;5;{0};", this.TerminalMode, code);
+				return String.Format ("{0}8;5;{1};", (int)this.TerminalMode, this.BasicValue);
 			case ColorMode.TrueColor:
-				return String.Format ("{0}8;2;{1};{2};{3};", this.TerminalMode, this.R, this.G, this.B);
+				return String.Format ("{0}8;2;{1};{2};{3};", (int)this.TerminalMode, this.R, this.G, this.B);
 			default:
 				throw new Exception ("If this were possible, I would be a moron");
 			}
