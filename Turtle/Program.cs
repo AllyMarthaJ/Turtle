@@ -1,4 +1,5 @@
-﻿using Turtle;
+﻿using System.Text.RegularExpressions;
+using Turtle;
 using Turtle.Generators;
 using Turtle.Graphics;
 
@@ -12,9 +13,11 @@ public class Program {
 		format.BackgroundColor = new Color (TerminalMode.Background, 5, 0, 5, false);
 		format.ForegroundColor = new Color (TerminalMode.Foreground, ColorName.BrightGreen);
 		FormattedString fmtString = "Hello, world";
-		fmtString.Formats.Add (new System.Text.RegularExpressions.Regex (".*"), format);
+		fmtString.Formats.Add (new Regex (".*"), format);
 		Console.WriteLine (fmtString);
+
 		return;
+
 		for (int i = 0; i < 16; i++) {
 			for (int j = 0; j < 16; j++) {
 				int code = i * 16 + j;

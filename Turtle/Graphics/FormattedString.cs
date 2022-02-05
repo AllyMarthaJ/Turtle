@@ -6,7 +6,7 @@ namespace Turtle.Graphics
 {
 	public class FormattedString
 	{
-		public const char ANSI_PREFIX = '\x1b';
+		public const string ANSI_PREFIX = "\x1b[";
 		public readonly StringBuilder RESET_FORMAT = new Format ().GetFormatBuilder();
 
 		public string RawValue { get; set; }
@@ -37,8 +37,10 @@ namespace Turtle.Graphics
 
 		private string formatLine(string line)
 		{
+			var tmpLine = line;
+
 			foreach (var format in this.Formats) {
-				format.Key.Replace(line, m => {
+				tmpLine = format.Key.Replace(tmpLine, m => {
 					var fmtBuilder = format.Value.GetFormatBuilder ();
 
 					fmtBuilder.Insert (0, ANSI_PREFIX);
@@ -50,7 +52,7 @@ namespace Turtle.Graphics
 				});
 			}
 
-			return line;
+			return tmpLine;
 		}
 	}
 }
