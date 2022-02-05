@@ -10,15 +10,28 @@ namespace Turtle.Graphics {
 		public bool Underline { get; set; }
 		public bool Italic { get; set; }
 
+		public Format(Color backgroundColor = null,
+			      Color foregroundColor = null,
+			      bool bold = false,
+			      bool underline = false,
+			      bool italic = false)
+		{
+			this.BackgroundColor = backgroundColor;
+			this.ForegroundColor = foregroundColor;
+			this.Bold = bold;
+			this.Underline = underline;
+			this.Italic = italic;
+		}
+
 		public StringBuilder GetFormatBuilder()
 		{
 			StringBuilder sb = new ();
 
-			if (this.BackgroundColor != null) sb.Append (this.BackgroundColor);
-			if (this.ForegroundColor != null) sb.Append (this.ForegroundColor);
 			if (this.Bold) sb.Append ("1;");
 			if (this.Italic) sb.Append ("3;");
 			if (this.Underline) sb.Append ("4;");
+			if (this.BackgroundColor != null) sb.Append (this.BackgroundColor);
+			if (this.ForegroundColor != null) sb.Append (this.ForegroundColor);
 
 			if (sb.Length == 0) {
 				sb.Append ("0;");
