@@ -2,12 +2,10 @@
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Turtle.Graphics
-{
-	public class FormattedString
-	{
+namespace Turtle.Graphics {
+	public class FormattedString {
 		public const string ANSI_PREFIX = "\x1b[";
-		public readonly StringBuilder RESET_FORMAT = new Format ().GetFormatBuilder();
+		public readonly StringBuilder RESET_FORMAT = new Format ().GetFormatBuilder ();
 
 		public string RawValue { get; set; }
 
@@ -18,7 +16,7 @@ namespace Turtle.Graphics
 			this.RawValue = value;
 		}
 
-		public static implicit operator string(FormattedString s)
+		public static implicit operator string (FormattedString s)
 		{
 			StringBuilder sb = new ();
 
@@ -29,26 +27,29 @@ namespace Turtle.Graphics
 			return sb.ToString ();
 		}
 
-		public static implicit operator FormattedString(string s)
+		public static implicit operator FormattedString (string s)
 		{
 			return new FormattedString (s);
 		}
 
-		private string formatLine(string line)
+		private string formatLine (string line)
 		{
 			var tmpLine = line;
 
 			foreach (var format in this.Formats) {
-				tmpLine = format.Key.Replace(tmpLine, m => {
+				tmpLine = format.Key.Replace (tmpLine, m => {
 					var fmtBuilder = format.Value.GetFormatBuilder ();
 
 					fmtBuilder.Insert (0, ANSI_PREFIX);
 					fmtBuilder.Append (m.Value);
-					fmtBuilder.Append (ANSI_PREFIX);
-					fmtBuilder.Append (RESET_FORMAT);
+					if (format.Value.ResetAfter) {
+						fmtBuilder.Append (ANSI_PREFIX);
+						fmtBuilder.Append (RESET_FORMAT);
+					}
 
 					return fmtBuilder.ToString ();
 				});
+
 			}
 
 			return tmpLine;
