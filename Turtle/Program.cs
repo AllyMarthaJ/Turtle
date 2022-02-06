@@ -13,12 +13,13 @@ public class Program {
 		//format.BackgroundColor = new Color (TerminalMode.Background, 5, 0, 5, false);
 		//format.ForegroundColor = new Color (TerminalMode.Foreground, ColorName.BrightGreen);
 
-		var format = new Format (backgroundColor: new Color (TerminalMode.Background, 2,2,2, false),
+		var format = new Format (backgroundColor: new Color (TerminalMode.Background, 2, 2, 2, false),
 					 bold: true,
-					 blink:true);
+					 blink: true,
+					 resetAfter: false);
 
 		FormattedString fmtString = "Hello, world\nThis is a new world\nHello hello world potatoes";
-		fmtString.Formats.Add (new Regex (".*"), new Format (italic: true));
+		fmtString.Formats.Add (new Regex (".*", RegexOptions.IgnoreCase), new Format (italic: true));
 		fmtString.Formats.Add (new Regex ("Hello", RegexOptions.IgnoreCase), format);
 		Console.WriteLine (fmtString);
 

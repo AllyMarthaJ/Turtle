@@ -11,6 +11,7 @@ namespace Turtle.Graphics {
 		public bool Italic { get; set; }
 		public bool Reverse { get; set; }
 		public bool Blink { get; set; }
+		public bool ResetAfter { get; set; }
 
 		public Format(Color backgroundColor = null,
 			      Color foregroundColor = null,
@@ -18,7 +19,8 @@ namespace Turtle.Graphics {
 			      bool underline = false,
 			      bool italic = false,
 			      bool reverse = false,
-			      bool blink = false)
+			      bool blink = false,
+			      bool resetAfter = true)
 		{
 			this.BackgroundColor = backgroundColor;
 			this.ForegroundColor = foregroundColor;
@@ -27,6 +29,7 @@ namespace Turtle.Graphics {
 			this.Italic = italic;
 			this.Reverse = reverse;
 			this.Blink = blink;
+			this.ResetAfter = resetAfter;
 		}
 
 		public StringBuilder GetFormatBuilder()
