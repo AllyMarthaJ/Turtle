@@ -9,18 +9,24 @@ namespace Turtle.Graphics {
 		public bool Bold { get; set; }
 		public bool Underline { get; set; }
 		public bool Italic { get; set; }
+		public bool Reverse { get; set; }
+		public bool Blink { get; set; }
 
 		public Format(Color backgroundColor = null,
 			      Color foregroundColor = null,
 			      bool bold = false,
 			      bool underline = false,
-			      bool italic = false)
+			      bool italic = false,
+			      bool reverse = false,
+			      bool blink = false)
 		{
 			this.BackgroundColor = backgroundColor;
 			this.ForegroundColor = foregroundColor;
 			this.Bold = bold;
 			this.Underline = underline;
 			this.Italic = italic;
+			this.Reverse = reverse;
+			this.Blink = blink;
 		}
 
 		public StringBuilder GetFormatBuilder()
@@ -30,6 +36,8 @@ namespace Turtle.Graphics {
 			if (this.Bold) sb.Append ("1;");
 			if (this.Italic) sb.Append ("3;");
 			if (this.Underline) sb.Append ("4;");
+			if (this.Blink) sb.Append ("5;");
+			if (this.Reverse) sb.Append ("7;");
 			if (this.BackgroundColor != null) sb.Append (this.BackgroundColor);
 			if (this.ForegroundColor != null) sb.Append (this.ForegroundColor);
 
@@ -41,110 +49,6 @@ namespace Turtle.Graphics {
 			sb.Append ('m');
 			return sb;
 		}
-	}
-	//colorizor9000("Bunny is always right", color: LegacyColor(3))
-
-	public class Color {
-		// declarative 
-		public ColorMode Mode { get; set; }
-		public TerminalMode TerminalMode { get; set; }
-
-		// TrueColor + Rgb6bit
-		public int R { get; set; }
-		public int G { get; set; }
-		public int B { get; set; }
-
-		// Legacy + Gray
-		private int basicValue;
-		public int BasicValue {
-			get {
-
-				return this.basicValue + this.getOffset ();
-			}
-			set {
-				this.basicValue = value;
-			}
-		}
-
-		public Color(TerminalMode termMode, ColorName legacyColorName)
-		{
-			this.Mode = ColorMode.Legacy16;
-			this.TerminalMode = termMode;
-			this.basicValue = (int)legacyColorName;
-		}
-
-		public Color(TerminalMode termMode, int r, int g, int b, bool isTrueColor = true)
-		{
-			this.Mode = isTrueColor? ColorMode.TrueColor : ColorMode.Rgb6bit;
-			this.TerminalMode = termMode;
-
-			this.R = r;
-			this.G = g;
-			this.B = b;
-		}
-
-		public Color(TerminalMode termMode, int grayscale)
-		{
-			this.Mode = ColorMode.Grayscale;
-			this.TerminalMode = termMode;
-
-			this.basicValue = grayscale;
-		}
-
-
-		private int getOffset () => this.Mode == ColorMode.Grayscale ? 232 : 0;
-
-		public static implicit operator string (Color c) => c.ToString ();
-
-		public override string ToString ()
-		{
-			int code;
-
-			switch (this.Mode) {
-			case ColorMode.Legacy16:
-				return String.Format ("{0}8;5;{1};", (int)this.TerminalMode, this.BasicValue);
-			case ColorMode.Rgb6bit:
-				code = 36 * this.R + 6 * this.G + this.B + 16;
-				return String.Format ("{0}8;5;{1};", (int)this.TerminalMode, code);
-			case ColorMode.Grayscale:
-				return String.Format ("{0}8;5;{1};", (int)this.TerminalMode, this.BasicValue);
-			case ColorMode.TrueColor:
-				return String.Format ("{0}8;2;{1};{2};{3};", (int)this.TerminalMode, this.R, this.G, this.B);
-			default:
-				throw new Exception ("If this were possible, I would be a moron");
-			}
-		}
-	}
-
-	public enum ColorName {
-		Black = 0,
-		Red = 1,
-		Green = 2,
-		Yellow = 3,
-		Blue = 4,
-		Magenta = 5,
-		Cyan = 6,
-		White = 7,
-		BrightBlack = 8,
-		BrightRed = 9,
-		BrightGreen = 10,
-		BrightYellow = 11,
-		BrightBlue = 12,
-		BrightMagenta = 13,
-		BrightCyan = 14,
-		BrightWhite = 15,
-	}
-
-	public enum ColorMode {
-		Legacy16,
-		Rgb6bit,
-		Grayscale,
-		TrueColor
-	}
-
-	public enum TerminalMode {
-		Foreground = 3,
-		Background = 4
 	}
 }
 
