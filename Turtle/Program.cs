@@ -35,6 +35,8 @@ public class Program {
 			var gameResult = game.Play (new Offset (2, verticalIncrement));
 
 			Console.ReadKey (true);
+
+			ConsoleHelpers.AlternateScreen = false;
 			Console.WriteLine (game.GetGameStateResult (gameResult));
 		} catch (Exception ex) {
 			Console.WriteLine ("Whoops! Something went wrong. Here's some information for you:");
