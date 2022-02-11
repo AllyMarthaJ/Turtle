@@ -5,16 +5,7 @@ namespace Turtle.Graphics {
 
 		public static void WriteInPlace (FormattedString input, Offset offset)
 		{
-			//var position = Console.GetCursorPosition ();
-
-			//var lines = input.Split (Environment.NewLine);
-
-			//for (int i = 0; i < lines.Length; i++) {
-			//	Console.CursorLeft = position.Left;
-			//	Console.WriteLine (lines [i]);
-			//}
-
-			//Console.CursorTop -= lines.Length;
+			Offset initOffset = new Offset (offset.X, offset.Y);
 
 			string formattedInput = input;
 			var rawLines = input.RawValue.Split (Environment.NewLine);
@@ -28,6 +19,11 @@ namespace Turtle.Graphics {
 				offset = new Offset (-rawLines [i].Length, 1);
 			}
 
+			var ret = InPlaceOffset ("", new Offset (
+					-rawLines [rawLines.Length - 1].Length - initOffset.X,
+					-rawLines.Length + 1 - initOffset.Y))
+				;
+			Console.Write (ret);
 		}
 
 		public static string InPlaceOffset (string str, Offset offset)
