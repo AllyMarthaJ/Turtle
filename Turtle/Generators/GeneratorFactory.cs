@@ -38,7 +38,7 @@ namespace Turtle.Generators {
 			// make a request to either the repo url, or direct url
 			var sourceResp = await fetchClient.GetAsync (url);
 			var source = await sourceResp.Content.ReadAsStringAsync ();
-			if (isRepo)
+			if (isRepo && VARS.STORE_GENERATOR)
 				await File.WriteAllTextAsync (localGen, source);
 
 			return source;
