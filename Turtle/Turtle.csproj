@@ -11,13 +11,11 @@
     <None Remove="Generators\" />
     <None Remove="Graphics\" />
     <None Remove="Environment\" />
-    <None Remove="Generators\Fetch\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Generators\" />
     <Folder Include="Graphics\" />
     <Folder Include="Env\" />
-    <Folder Include="Generators\Fetch\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj" />
