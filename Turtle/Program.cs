@@ -13,25 +13,33 @@ public class Program {
 		var source = await gf.GetGeneratorSource (VARS.GAME);
 		var generator = await gf.CompileGeneratorSource (source);
 
+		// setting up game environment
 		int verticalIncrement = 1;
 		ConsoleHelpers.AlternateScreen = true;
 
-		// game behaviour and display config
-		TurtleGame game = VARS.SEED == 0 ?
-			new TurtleGame (generator, VARS.HARD_MODE) :
-			new (generator, VARS.SEED, VARS.HARD_MODE);
+		AppDomain.CurrentDomain.ProcessExit += (o, e) => {
+			ConsoleHelpers.AlternateScreen = false;
+		};
 
-		if (VARS.SHOW_TITLE)
-			verticalIncrement += game.DrawStyledTurtle (new Offset (1, verticalIncrement)) + 1;
-		if (VARS.SHOW_KEYBOARD)
-			verticalIncrement += game.DrawKeyboard (new Offset (1, verticalIncrement)) + 1;
+		try {
+			// game behaviour and display config
+			TurtleGame game = VARS.SEED == 0 ?
+				new TurtleGame (generator, VARS.HARD_MODE) :
+				new (generator, VARS.SEED, VARS.HARD_MODE);
 
-		var gameResult = game.Play (new Offset(2, verticalIncrement));
+			if (VARS.SHOW_TITLE)
+				verticalIncrement += game.DrawStyledTurtle (new Offset (1, verticalIncrement)) + 1;
+			if (VARS.SHOW_KEYBOARD)
+				verticalIncrement += game.DrawKeyboard (new Offset (1, verticalIncrement)) + 1;
 
-		Console.ReadKey (true);
+			var gameResult = game.Play (new Offset (2, verticalIncrement));
 
-		ConsoleHelpers.AlternateScreen = false;
-
-		Console.WriteLine (game.GetGameStateResult (gameResult));
+			Console.ReadKey (true);
+			Console.WriteLine (game.GetGameStateResult (gameResult));
+		} catch (Exception ex) {
+			Console.WriteLine ("Whoops! Something went wrong. Here's some information for you:");
+			Console.WriteLine ("Message: " + ex.Message);
+			Console.WriteLine ("More details: " + ex.InnerException ?? "None available.");
+		}
 	}
 }

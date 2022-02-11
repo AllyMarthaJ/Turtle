@@ -21,7 +21,7 @@ namespace Turtle {
 			bool hasWon = false;
 
 			// render
-			drawGrid (turn, String.Empty, offset);
+			int height = drawGrid (turn, String.Empty, offset);
 
 			while (turn <= currentGenerator.MaxTurns && !hasWon) {
 				// handle character input
@@ -40,6 +40,14 @@ namespace Turtle {
 
 				turn++;
 			}
+
+			FormattedString gameMessage = hasWon ?
+				"[Congratulations, you've won!]" :
+				$"[Better luck next time. The word was {this.Solution}.]";
+			gameMessage.Formats.Add (new Regex ("[\\[\\]]"), new Format (
+					faint: true
+				)) ;
+			gameMessage.Draw (offset.X, height + 1);
 
 			return hasWon ? turn - 1 : -1;
 		}
@@ -134,6 +142,8 @@ namespace Turtle {
 				}
 
 				wordBuilder.Remove (wordBuilder.Length - 1, 1);
+			} else if (input.Key == ConsoleKey.Escape) {
+				Environment.Exit (0);
 			} else if (input.Key == ConsoleKey.Enter) {
 				// submit word
 				var wordResult = this.ValidateAndUpdateUpstream (wordBuilder.ToString ());
@@ -162,7 +172,7 @@ namespace Turtle {
 		}
 
 		// TODO: Instead of rendering entire grid in parts, a StringBuilder will store the entire grid.
-		private void drawGrid (int turn, string currentWord, Offset stdOffset)
+		private int drawGrid (int turn, string currentWord, Offset stdOffset)
 		{
 			if (String.IsNullOrWhiteSpace (this.block))
 				this.block = getBlock (VARS.BLOCK_WIDTH, VARS.BLOCK_HEIGHT);
@@ -202,6 +212,8 @@ namespace Turtle {
 					}
 				}
 			}
+
+			return this.currentGenerator.MaxTurns * (VARS.BLOCK_HEIGHT + 1) + stdOffset.Y;
 		}
 
 		private string getBlock (int width, int height)
