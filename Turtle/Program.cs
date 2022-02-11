@@ -12,6 +12,8 @@ public class Program {
 
 		var game = new TurtleGame (new ExampleGenerator (), 0);
 
+		// game behaviour and display config
+		game.HardMode = VARS.HARD_MODE;
 		if (VARS.SHOW_TITLE)
 			verticalIncrement += game.DrawStyledTurtle (new Offset (1, verticalIncrement)) + 1;
 		if (VARS.SHOW_KEYBOARD)

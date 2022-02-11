@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text.RegularExpressions;
+
 namespace Turtle.Graphics {
 
 	public enum ColorName {
@@ -82,8 +84,6 @@ namespace Turtle.Graphics {
 
 		private int getOffset () => this.Mode == ColorMode.Grayscale ? 232 : 0;
 
-		public static implicit operator string (Color c) => c.ToString ();
-
 		public override string ToString ()
 		{
 			int code;
@@ -92,6 +92,7 @@ namespace Turtle.Graphics {
 			case ColorMode.Legacy16:
 				return String.Format ("{0}8;5;{1};", (int)this.TerminalMode, this.BasicValue);
 			case ColorMode.Rgb6bit:
+				// 0-5 for all 3 values
 				code = 36 * this.R + 6 * this.G + this.B + 16;
 				return String.Format ("{0}8;5;{1};", (int)this.TerminalMode, code);
 			case ColorMode.Grayscale:
@@ -100,6 +101,30 @@ namespace Turtle.Graphics {
 				return String.Format ("{0}8;2;{1};{2};{3};", (int)this.TerminalMode, this.R, this.G, this.B);
 			default:
 				throw new Exception ("If this were possible, I would be a moron");
+			}
+		}
+
+		public static implicit operator string (Color c) => c.ToString ();
+
+		public static Color Parse (TerminalMode mode, string s)
+		{
+			var m = Regex.Match (s, "([\\w]+)\\((.*?)\\)");
+			if (m.Groups.Count < 3)
+				throw new ArgumentException ("Invalid color command.");
+			var command = m.Groups [1].Value.ToLower ();
+			var args = m.Groups [2].Value.Split (";");
+
+			switch (command) {
+			case "rgb6bit":
+				return new Color (mode, Int32.Parse (args [0]), Int32.Parse (args [1]), Int32.Parse (args [2]), false);
+			case "true":
+				return new Color (mode, Int32.Parse (args [0]), Int32.Parse (args [1]), Int32.Parse (args [2]), true);
+			case "gray":
+				return new Color (mode, Int32.Parse (args [0]));
+			case "legacy":
+				return new Color (mode, Enum.Parse<ColorName> (args [0]));
+			default:
+				throw new Exception ("Invalid color command");
 			}
 		}
 	}
