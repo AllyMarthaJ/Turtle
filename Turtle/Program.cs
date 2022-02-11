@@ -31,6 +31,5 @@ public class Program {
 		//	}
 		//	Thread.Sleep (50);
 		//}
-		Console.ReadKey ();
 	}
 }

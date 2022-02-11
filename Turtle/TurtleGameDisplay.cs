@@ -12,13 +12,13 @@ namespace Turtle {
 		Random rnd = new Random ();
 
 		private readonly Format emptyBlockFormat = new (backgroundColor: new Color (TerminalMode.Background, 4),
-								foregroundColor: new Color (TerminalMode.Foreground, 24));
+								foregroundColor: new Color (TerminalMode.Foreground, 24), bold: true);
 		private readonly Format goodPosBlockFormat = new (backgroundColor: new Color (TerminalMode.Background, ColorName.BrightGreen),
-							       foregroundColor: new Color (TerminalMode.Foreground, ColorName.Black));
+							       foregroundColor: new Color (TerminalMode.Foreground, ColorName.Black), bold: true);
 		private readonly Format badPosBlockFormat = new (backgroundColor: new Color (TerminalMode.Background, ColorName.BrightYellow),
-							       foregroundColor: new Color (TerminalMode.Foreground, ColorName.Black));
+							       foregroundColor: new Color (TerminalMode.Foreground, ColorName.Black), bold: true);
 		private readonly Format badCharBlockFormat = new (backgroundColor: new Color (TerminalMode.Background, ColorName.BrightRed),
-							       foregroundColor: new Color (TerminalMode.Foreground, ColorName.Black));
+							       foregroundColor: new Color (TerminalMode.Foreground, ColorName.Black), bold: true);
 
 		public void Play ()
 		{
@@ -38,19 +38,36 @@ namespace Turtle {
 
 					// check if valid key
 					if (this.currentGenerator.Keys.Where (k => k.inputKey == input.Key).Count () > 0) {
+						if (wordBuilder.Length >= this.Solution.Length) {
+							continue;
+						}
+
 						wordBuilder.Append (Char.ToLower (input.KeyChar));
-					} else if ((input.Key == ConsoleKey.Delete || input.Key == ConsoleKey.Backspace) && wordBuilder.Length > 0) {
+					} else if (input.Key == ConsoleKey.Delete || input.Key == ConsoleKey.Backspace) {
+						if (wordBuilder.Length == 0) {
+							continue;
+						}
 						wordBuilder.Remove (wordBuilder.Length - 1, 1);
 					} else if (input.Key == ConsoleKey.Enter) {
 						// submit word
 						var wordResult = this.ValidateAndUpdateUpstream (wordBuilder.ToString ());
 
 						if (wordResult.Length == 0) {
-							if (wordBuilder.Length == this.Solution.Length) {
-								wordBuilder.Clear ();
+							// only clear the buffer if we've written a full word
+							if (wordBuilder.Length != this.Solution.Length) {
+								continue;
 							}
+							wordBuilder.Clear ();
+
 						} else {
+							// we've got a valid word!
 							validWord = true;
+
+							if (wordBuilder.ToString().Equals(this.Solution, StringComparison.OrdinalIgnoreCase)) {
+								hasWon = true;
+							}
+
+							// chuck the check in the gamestate
 							this.GameState [turn - 1] = wordResult;
 						}
 					}
@@ -68,7 +85,6 @@ namespace Turtle {
 			if (String.IsNullOrWhiteSpace (this.block))
 				this.block = getBlock (BLOCK_WIDTH, BLOCK_HEIGHT);
 
-
 			FormattedString emptyBlock = this.block;
 			emptyBlock.Formats.Add (new Regex (".*"), emptyBlockFormat);
 
@@ -77,15 +93,21 @@ namespace Turtle {
 					int blockX = x * (BLOCK_WIDTH + 2);
 					int blockY = y * (BLOCK_HEIGHT + 1);
 
+					int wcOffsetX = BLOCK_WIDTH / 2;
+					int wcOffsetY = BLOCK_HEIGHT / 2;
+
 					if (this.GameState [y] == null) {
 						ConsoleHelpers.WriteInPlace (emptyBlock, new Offset (blockX, blockY));
+
+						// drawing the current turn
 						if (y == turn - 1 && x < currentWord.Length) {
 							FormattedString wc = currentWord [x].ToString ();
 							wc.Formats.Add (new Regex (".*"), emptyBlockFormat);
 
-							ConsoleHelpers.WriteInPlace (wc, new Offset (blockX + 2, blockY + 1));
+							ConsoleHelpers.WriteInPlace (wc, new Offset (blockX + wcOffsetX, blockY + wcOffsetY));
 						}
 					} else {
+						// drawing all previous results
 						FormattedString block = this.block;
 						block.Formats.Add (new Regex (".*"), getHintBlock (this.GameState [y] [x].Hint));
 
@@ -94,17 +116,17 @@ namespace Turtle {
 						FormattedString wc = this.GameState [y] [x].Entry.ToString ();
 						wc.Formats.Add (new Regex (".*"), getHintBlock (this.GameState [y] [x].Hint));
 
-						ConsoleHelpers.WriteInPlace (wc, new Offset (blockX + 2, blockY + 1));
+						ConsoleHelpers.WriteInPlace (wc, new Offset (blockX + wcOffsetX, blockY + wcOffsetY));
 					}
 				}
 			}
 		}
-
+			
 		private string getBlock (int width, int height)
 		{
 			StringBuilder sb = new StringBuilder ();
 
-			string line = new string (' ', width);
+			string line = new(' ', width);
 
 			for (int i = 0; i < height; i++) {
 				sb.AppendLine (line);
@@ -116,7 +138,8 @@ namespace Turtle {
 		private Format getHintBlock (HintMode c) => c switch {
 			HintMode.BadCharacter => this.badCharBlockFormat,
 			HintMode.BadPosition => this.badPosBlockFormat,
-			HintMode.GoodPosition => this.goodPosBlockFormat
+			HintMode.GoodPosition => this.goodPosBlockFormat,
+			_ => this.emptyBlockFormat
 		};
 	}
 }
