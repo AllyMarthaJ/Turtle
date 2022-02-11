@@ -39,12 +39,12 @@ namespace Turtle.Graphics {
 		public ColorMode Mode { get; set; }
 		public TerminalMode TerminalMode { get; set; }
 
-		// TrueColor + Rgb6bit
+		// TrueColor + Rgb6bit (0-255 or 0-5)
 		public int R { get; set; }
 		public int G { get; set; }
 		public int B { get; set; }
 
-		// Legacy + Gray
+		// Legacy + Gray (0-23)
 		private int basicValue;
 		public int BasicValue {
 			get {
@@ -113,8 +113,6 @@ namespace Turtle.Graphics {
 				throw new ArgumentException ("Invalid color command.");
 			var command = m.Groups [1].Value.ToLower ();
 			var args = m.Groups [2].Value.Split (",");
-
-			Console.WriteLine (String.Join (", ", args));
 
 			switch (command) {
 			case "rgb6bit":

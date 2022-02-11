@@ -44,7 +44,7 @@ namespace Turtle {
 			return hasWon;
 		}
 
-		public int DrawKeyboard(Offset offset)
+		public int DrawKeyboard (Offset offset)
 		{
 			var rows = this.currentGenerator.Keys.Select (k => k.rowNum).Distinct ().ToArray ();
 
@@ -56,10 +56,10 @@ namespace Turtle {
 
 			for (int i = 0; i < rows.Length; i++) {
 				// where y is rows[i]
-				var keys = this.currentGenerator.Keys.Where (k => k.rowNum == rows [i]).ToArray();
+				var keys = this.currentGenerator.Keys.Where (k => k.rowNum == rows [i]).ToArray ();
 
 				for (int x = 0; x < keys.Length; x++) {
-					fmtKey.RawValue = $"[{keys [x].displayKey.ToString()}]";
+					fmtKey.RawValue = $"[{keys [x].displayKey.ToString ()}]";
 					fmtKey.Draw (4 * x + offset.X + 10, rows [i] + offset.Y);
 				}
 			}
@@ -70,7 +70,10 @@ namespace Turtle {
 
 		public int DrawStyledTurtle (Offset offset)
 		{
-			FormattedString turtle = VARS.TITLE;
+			FormattedString turtle = VARS.TITLE
+				.Replace ("{author}",
+					this.currentGenerator.Author + new string(' ', 36 - this.currentGenerator.Author.Length))
+				.Replace ("{generator}", this.currentGenerator.Name);
 
 			turtle.Formats.Add (new Regex ("(?<![a-zA-Z(:/)])[\\\\/|]"), new Format (
 					bold: true,

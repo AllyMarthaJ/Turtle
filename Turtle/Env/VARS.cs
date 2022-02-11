@@ -37,6 +37,7 @@ namespace Turtle.Env
                                                         
 Author :  https://github.com/AllyMarthaJ/     : me
           https://github.com/Ebony-Ayers/     : bunny, xoxo
+          {author}: {generator}
 ASCII  :  http://www.figlet.org/              : also see Fonty2
           http://asciiart.eu/";
 	}
