@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Text;
 using System.Text.RegularExpressions;
+using Turtle.Env;
 using Turtle.Generators;
 using Turtle.Graphics;
 
 namespace Turtle {
 	public partial class TurtleGame {
-		private const int BLOCK_WIDTH = 5;
-		private const int BLOCK_HEIGHT = 3;
 		private string block = String.Empty;
 		Random rnd = new Random ();
 
@@ -63,7 +62,7 @@ namespace Turtle {
 							// we've got a valid word!
 							validWord = true;
 
-							if (wordBuilder.ToString().Equals(this.Solution, StringComparison.OrdinalIgnoreCase)) {
+							if (wordBuilder.ToString ().Equals (this.Solution, StringComparison.OrdinalIgnoreCase)) {
 								hasWon = true;
 							}
 
@@ -83,50 +82,50 @@ namespace Turtle {
 		private void drawGrid (int turn, string currentWord)
 		{
 			if (String.IsNullOrWhiteSpace (this.block))
-				this.block = getBlock (BLOCK_WIDTH, BLOCK_HEIGHT);
+				this.block = getBlock (VARS.BLOCK_WIDTH, VARS.BLOCK_HEIGHT);
 
 			FormattedString emptyBlock = this.block;
 			emptyBlock.Formats.Add (new Regex (".*"), emptyBlockFormat);
 
 			for (int y = 0; y < this.currentGenerator.MaxTurns; y++) {
 				for (int x = 0; x < this.Solution.Length; x++) {
-					int blockX = x * (BLOCK_WIDTH + 2);
-					int blockY = y * (BLOCK_HEIGHT + 1);
+					int blockX = x * (VARS.BLOCK_WIDTH + 2);
+					int blockY = y * (VARS.BLOCK_HEIGHT + 1);
 
-					int wcOffsetX = BLOCK_WIDTH / 2;
-					int wcOffsetY = BLOCK_HEIGHT / 2;
+					int wcOffsetX = VARS.BLOCK_WIDTH / 2;
+					int wcOffsetY = VARS.BLOCK_HEIGHT / 2;
 
 					if (this.GameState [y] == null) {
-						ConsoleHelpers.WriteInPlace (emptyBlock, new Offset (blockX, blockY));
+						emptyBlock.Draw (blockX, blockY);
 
 						// drawing the current turn
 						if (y == turn - 1 && x < currentWord.Length) {
 							FormattedString wc = currentWord [x].ToString ();
 							wc.Formats.Add (new Regex (".*"), emptyBlockFormat);
 
-							ConsoleHelpers.WriteInPlace (wc, new Offset (blockX + wcOffsetX, blockY + wcOffsetY));
+							wc.Draw (blockX + wcOffsetX, blockY + wcOffsetY);
 						}
 					} else {
 						// drawing all previous results
 						FormattedString block = this.block;
 						block.Formats.Add (new Regex (".*"), getHintBlock (this.GameState [y] [x].Hint));
 
-						ConsoleHelpers.WriteInPlace (block, new Offset (blockX, blockY));
+						block.Draw(blockX, blockY);
 
 						FormattedString wc = this.GameState [y] [x].Entry.ToString ();
 						wc.Formats.Add (new Regex (".*"), getHintBlock (this.GameState [y] [x].Hint));
 
-						ConsoleHelpers.WriteInPlace (wc, new Offset (blockX + wcOffsetX, blockY + wcOffsetY));
+						wc.Draw(blockX + wcOffsetX, blockY + wcOffsetY);
 					}
 				}
 			}
 		}
-			
+
 		private string getBlock (int width, int height)
 		{
 			StringBuilder sb = new StringBuilder ();
 
-			string line = new(' ', width);
+			string line = new (' ', width);
 
 			for (int i = 0; i < height; i++) {
 				sb.AppendLine (line);

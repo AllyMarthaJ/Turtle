@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Text;
+using Turtle.Env;
 
 namespace Turtle.Graphics {
 	public static class ConsoleHelpers {
-		public const string ANSI_PREFIX = "\x1b[";
-
 		private static bool alternate = false;
 		public static bool AlternateScreen {
 			get {
@@ -12,7 +11,7 @@ namespace Turtle.Graphics {
 			}
 			set {
 				StringBuilder sb = new ();
-				sb.Append (ANSI_PREFIX);
+				sb.Append (VARS.ANSI_PREFIX);
 				sb.Append ("?1049");
 				sb.Append (value ? "h" : "l");
 				Console.Write (sb.ToString ());
@@ -44,9 +43,9 @@ namespace Turtle.Graphics {
 			Console.Write (ret);
 		}
 
-		public static void Draw (this FormattedString input, Offset offset)
+		public static void Draw (this FormattedString input, int x = 0, int y = 0)
 		{
-			WriteInPlace (input, offset);
+			WriteInPlace (input, new Offset (x, y));
 		}
 
 		public static string GetPositionedString (string str, Offset offset)
