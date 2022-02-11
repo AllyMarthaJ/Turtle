@@ -9,6 +9,7 @@ namespace Turtle.Env
 		public static readonly int BLOCK_HEIGHT = Int32.Parse (Environment.GetEnvironmentVariable ("BLOCK_HEIGHT") ?? "3");
 
 		public static readonly bool SHOW_TITLE = bool.Parse (Environment.GetEnvironmentVariable ("SHOW_TITLE") ?? "true");
+		public static readonly bool SHOW_KEYBOARD = bool.Parse (Environment.GetEnvironmentVariable ("SHOW_KEYBOARD") ?? "true");
 
 		internal static readonly string TITLE = @" _              _   _      
 | |            | | | |         _____     ____
@@ -20,8 +21,7 @@ namespace Turtle.Env
 Author :  https://github.com/AllyMarthaJ/     : me
           https://github.com/Ebony-Ayers/     : bunny, xoxo
 ASCII  :  http://www.figlet.org/              : also see Fonty2
-          http://asciiart.eu/
-                                                        ";
+          http://asciiart.eu/";
 	}
 }
 
