@@ -12,14 +12,14 @@ namespace Turtle {
 
 		private readonly Format emptyBlockFormat = new (backgroundColor: new Color (TerminalMode.Background, 4),
 								foregroundColor: new Color (TerminalMode.Foreground, 24), bold: true);
-		private readonly Format goodPosBlockFormat = new (backgroundColor: new Color (TerminalMode.Background, ColorName.BrightGreen),
+		private readonly Format goodPosBlockFormat = new (backgroundColor: new Color (TerminalMode.Background, 3, 4, 1, false),
 							       foregroundColor: new Color (TerminalMode.Foreground, ColorName.Black), bold: true);
-		private readonly Format badPosBlockFormat = new (backgroundColor: new Color (TerminalMode.Background, ColorName.BrightYellow),
+		private readonly Format badPosBlockFormat = new (backgroundColor: new Color (TerminalMode.Background, 5, 4, 2, false),
 							       foregroundColor: new Color (TerminalMode.Foreground, ColorName.Black), bold: true);
-		private readonly Format badCharBlockFormat = new (backgroundColor: new Color (TerminalMode.Background, ColorName.BrightRed),
+		private readonly Format badCharBlockFormat = new (backgroundColor: new Color (TerminalMode.Background, 5, 3, 3, false),
 							       foregroundColor: new Color (TerminalMode.Foreground, ColorName.Black), bold: true);
 
-		public void Play ()
+		public void Play (Offset offset)
 		{
 			int turn = 1;
 			bool hasWon = false;
@@ -29,7 +29,7 @@ namespace Turtle {
 				bool validWord = false;
 				StringBuilder wordBuilder = new ();
 
-				drawGrid (turn, wordBuilder.ToString ());
+				drawGrid (turn, wordBuilder.ToString (), offset);
 
 				while (!validWord) {
 					// user input
@@ -72,14 +72,15 @@ namespace Turtle {
 					}
 
 					// render
-					drawGrid (turn, wordBuilder.ToString ());
+					drawGrid (turn, wordBuilder.ToString (), offset);
 				}
 
 				turn++;
 			}
 		}
 
-		private void drawGrid (int turn, string currentWord)
+		// TODO: Instead of rendering entire grid in parts, a StringBuilder will store the entire grid.
+		private void drawGrid (int turn, string currentWord, Offset stdOffset)
 		{
 			if (String.IsNullOrWhiteSpace (this.block))
 				this.block = getBlock (VARS.BLOCK_WIDTH, VARS.BLOCK_HEIGHT);
@@ -89,8 +90,8 @@ namespace Turtle {
 
 			for (int y = 0; y < this.currentGenerator.MaxTurns; y++) {
 				for (int x = 0; x < this.Solution.Length; x++) {
-					int blockX = x * (VARS.BLOCK_WIDTH + 2);
-					int blockY = y * (VARS.BLOCK_HEIGHT + 1);
+					int blockX = x * (VARS.BLOCK_WIDTH + 2) + stdOffset.X;
+					int blockY = y * (VARS.BLOCK_HEIGHT + 1) + stdOffset.Y;
 
 					int wcOffsetX = VARS.BLOCK_WIDTH / 2;
 					int wcOffsetY = VARS.BLOCK_HEIGHT / 2;
@@ -110,12 +111,12 @@ namespace Turtle {
 						FormattedString block = this.block;
 						block.Formats.Add (new Regex (".*"), getHintBlock (this.GameState [y] [x].Hint));
 
-						block.Draw(blockX, blockY);
+						block.Draw (blockX, blockY);
 
 						FormattedString wc = this.GameState [y] [x].Entry.ToString ();
 						wc.Formats.Add (new Regex (".*"), getHintBlock (this.GameState [y] [x].Hint));
 
-						wc.Draw(blockX + wcOffsetX, blockY + wcOffsetY);
+						wc.Draw (blockX + wcOffsetX, blockY + wcOffsetY);
 					}
 				}
 			}
