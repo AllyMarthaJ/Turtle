@@ -1,12 +1,11 @@
 ﻿using System;
+using System.Text.Json;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using Turtle.Env;
 
-namespace Turtle.Generators
-{
-	public class GeneratorFactory
-	{
+namespace Turtle.Generators {
+	public class GeneratorFactory {
 		private HttpClient fetchClient;
 
 		public GeneratorFactory (HttpClient client)
@@ -14,12 +13,12 @@ namespace Turtle.Generators
 			this.fetchClient = client;
 		}
 
-		public async Task<string> GetGeneratorSource(string urlOrUuid)
+		public async Task<string> GetGeneratorSource (string urlOrUuid)
 		{
 			string url = urlOrUuid;
 
 			// if we fail to create a uri, fetch the repo and then grab the relevant url
-			if (!Uri.TryCreate(urlOrUuid, UriKind.Absolute, out _)) {
+			if (!Uri.TryCreate (urlOrUuid, UriKind.Absolute, out _)) {
 				var repo = await this.fetchRepository ();
 
 				url = repo [url];
@@ -30,7 +29,7 @@ namespace Turtle.Generators
 			return await sourceResp.Content.ReadAsStringAsync ();
 		}
 
-		private async Task<Dictionary<string, string>> fetchRepository()
+		private async Task<Dictionary<string, string>> fetchRepository ()
 		{
 			// fetch the repo
 			var response = await fetchClient.GetAsync (VARS.REPO);
@@ -41,21 +40,21 @@ namespace Turtle.Generators
 			}
 
 			// convert everything to a nice neat object oriented form
-			var content = await response.Content.ReadAsStringAsync();
+			var content = await response.Content.ReadAsStringAsync ();
 
-			var repository = new Dictionary<string, string> ();
-
-			foreach (var line in content.Split(Environment.NewLine)) {
-				var entry = line.Split (" : ");
-				repository.Add (entry[0], entry [1]);
+			if (content == null) {
+				return new Dictionary<string, string> ();
 			}
 
-			return repository;
+			return JsonSerializer.Deserialize<Dictionary<string, string>> (content);
 		}
 
-		public IGenerator CompileGeneratorSource(string source)
+		public async Task<IGenerator> CompileGeneratorSource (string source)
 		{
-			CSharpScript.Create (source, ScriptOptions.Default.WithReferences (typeof (IGenerator).Assembly));
+			var scriptResult = await CSharpScript
+						.Create (source, ScriptOptions.Default.WithReferences (typeof (IGenerator).Assembly))
+						.RunAsync();
+			return (IGenerator)scriptResult.ReturnValue;
 		}
 	}
 }
