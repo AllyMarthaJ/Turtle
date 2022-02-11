@@ -1,14 +1,13 @@
-# Turtle
-*Not* a clone of any particular game that was recently bought by NYT, but with extensible generators...
-
 # Compiling
 You will require `dotnet` on your machine; in particular, you will need `6.0`.
 
-Run `./publish.sh {platform}` (e.g. `win`, `mac`, `linux`) to get a compiled version of the game. This will create an executable in `/Turtle/bin/debug/net6.0/{platform}/publish/`.
+Run `./publish.sh {platform}` (e.g. `win`, `osx`, `linux`) to get a compiled version of the game. This will create an executable in `/Turtle/bin/debug/net6.0/{platform}/publish/`.
 
 This binary is not cross-platform, but is self-contained and can be shared.
 
 # Getting Started
+*Not* a clone of any particular game that was recently bought by NYT, but with extensible generators...
+
 Turtle can be started by running `./Turtle` in whichever directory the binary is located in. You'll be good to go, except for configuration of the game itself.
 
 # Configuration
@@ -51,3 +50,8 @@ For example, you could run a minimal `common` game with:
 ```
 SHOW_TITLE=false SHOW_KEYBOARD=false GAME=common ./turtle
 ```
+
+# Contributing to Generators!
+The great thing about this is you can contribute your own games! Take a look at https://github.com/AllyMarthaJ/OpenTurtleGenerators for inspiration for code, but the important thing is you implement the `IGenerator` interface. This is exposed in the `Core` project - so you can create your project or temporarily add to that!
+
+After you're done, open a branch on the repository above amending both the main repository JSON file and adding your own folder & script. Open a PR and I'll approve it if it's safe code :)
