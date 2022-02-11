@@ -1,11 +1,9 @@
 ﻿using System;
-namespace Turtle.Graphics
-{
-	public class ConsoleHelpers
-	{
+namespace Turtle.Graphics {
+	public class ConsoleHelpers {
 		public const string ANSI_PREFIX = "\x1b[";
 
-		public static void WriteInPlace(FormattedString input, Offset offset)
+		public static void WriteInPlace (FormattedString input, Offset offset)
 		{
 			//var position = Console.GetCursorPosition ();
 
@@ -27,13 +25,12 @@ namespace Turtle.Graphics
 
 				Console.Write (offsetLine);
 
-				offset.X -= rawLines[i].Length;
-				offset.Y += 1;
+				offset = new Offset (-rawLines [i].Length, 1);
 			}
 
 		}
 
-		public static string InPlaceOffset(string str, Offset offset)
+		public static string InPlaceOffset (string str, Offset offset)
 		{
 			foreach (var offsetBuilder in offset.GetOffsetBuilders ()) {
 				offsetBuilder.Insert (0, ConsoleHelpers.ANSI_PREFIX);
