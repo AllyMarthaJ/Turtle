@@ -10,14 +10,10 @@ namespace Turtle {
 		private string block = String.Empty;
 		Random rnd = new Random ();
 
-		private readonly Format emptyBlockFormat = new (backgroundColor: new Color (TerminalMode.Background, 4),
-								foregroundColor: new Color (TerminalMode.Foreground, 24), bold: true);
-		private readonly Format goodPosBlockFormat = new (backgroundColor: new Color (TerminalMode.Background, 3, 4, 1, false),
-							       foregroundColor: new Color (TerminalMode.Foreground, ColorName.Black), bold: true);
-		private readonly Format badPosBlockFormat = new (backgroundColor: new Color (TerminalMode.Background, 5, 4, 2, false),
-							       foregroundColor: new Color (TerminalMode.Foreground, ColorName.Black), bold: true);
-		private readonly Format badCharBlockFormat = new (backgroundColor: new Color (TerminalMode.Background, 5, 3, 3, false),
-							       foregroundColor: new Color (TerminalMode.Foreground, ColorName.Black), bold: true);
+		private readonly Format emptyBlockFormat = new (backgroundColor: VARS.DEFAULT_BACK, foregroundColor: VARS.DEFAULT_FORE, bold: true);
+		private readonly Format goodPosBlockFormat = new (backgroundColor: VARS.GOOD_CHAR_BACK, foregroundColor: VARS.GOOD_CHAR_FORE, bold: true);
+		private readonly Format badPosBlockFormat = new (backgroundColor: VARS.BAD_POS_BACK, foregroundColor: VARS.BAD_POS_FORE, bold: true);
+		private readonly Format badCharBlockFormat = new (backgroundColor: VARS.BAD_CHAR_BACK, foregroundColor: VARS.BAD_CHAR_FORE, bold: true);
 
 		public bool Play (Offset offset)
 		{
@@ -64,7 +60,7 @@ namespace Turtle {
 
 				for (int x = 0; x < keys.Length; x++) {
 					fmtKey.RawValue = $"[{keys [x].displayKey.ToString()}]";
-					fmtKey.Draw (4 * x + offset.X + 9, rows [i] + offset.Y);
+					fmtKey.Draw (4 * x + offset.X + 10, rows [i] + offset.Y);
 				}
 			}
 
