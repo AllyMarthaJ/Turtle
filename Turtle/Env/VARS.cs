@@ -27,6 +27,9 @@ namespace Turtle.Env
 		public static readonly Color DEFAULT_BACK = Color.Parse (TerminalMode.Background, Environment.GetEnvironmentVariable ("DEFAULT_BACK") ?? "gray(4)");
 		public static readonly Color DEFAULT_FORE = Color.Parse (TerminalMode.Foreground, Environment.GetEnvironmentVariable ("DEFAULT_FORE") ?? "legacy(White)");
 
+		// fetch repo
+		public static readonly string REPO = Environment.GetEnvironmentVariable ("REPO") ?? "https://gist.github.com/AllyMarthaJ/7248485564038903e92ee04571afc27c";
+
 		// you don't even need to ask
 		internal static readonly string TITLE = @" _              _   _      
 | |            | | | |         _____     ____
