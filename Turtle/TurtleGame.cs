@@ -17,7 +17,7 @@ namespace Turtle {
 		public CharHint [] [] GameState { get; }
 
 		public TurtleGame (IGenerator generator, bool hard = false) :
-			this (generator, (DateTime.UtcNow - DateTime.UnixEpoch).Milliseconds, hard)
+			this (generator, (DateTime.Today.ToUniversalTime() - DateTime.UnixEpoch).Milliseconds, hard)
 		{ }
 
 		public TurtleGame (IGenerator generator, int seed, bool hard = false)

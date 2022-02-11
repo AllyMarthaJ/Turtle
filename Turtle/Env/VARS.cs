@@ -30,6 +30,10 @@ namespace Turtle.Env
 		// fetch repo
 		public static readonly string REPO = Environment.GetEnvironmentVariable ("REPO") ?? "https://raw.githubusercontent.com/AllyMarthaJ/OpenTurtleGenerators/master/generators.json";
 
+		// game data
+		public static readonly string GAME = Environment.GetEnvironmentVariable ("GAME") ?? "example";
+		public static readonly int SEED = Int32.Parse (Environment.GetEnvironmentVariable ("SEED") ?? "0");
+
 		// you don't even need to ask
 		internal static readonly string TITLE = @" _              _   _      
 | |            | | | |         _____     ____
