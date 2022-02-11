@@ -26,10 +26,12 @@ public class Program {
 		if (VARS.SHOW_KEYBOARD)
 			verticalIncrement += game.DrawKeyboard (new Offset (1, verticalIncrement)) + 1;
 
-		game.Play (new Offset(2, verticalIncrement));
+		var gameResult = game.Play (new Offset(2, verticalIncrement));
 
 		Console.ReadKey (true);
 
 		ConsoleHelpers.AlternateScreen = false;
+
+		Console.WriteLine (game.GetGameStateResult (gameResult));
 	}
 }

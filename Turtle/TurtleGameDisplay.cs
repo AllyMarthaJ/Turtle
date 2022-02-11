@@ -15,7 +15,7 @@ namespace Turtle {
 		private readonly Format badPosBlockFormat = new (backgroundColor: VARS.BAD_POS_BACK, foregroundColor: VARS.BAD_POS_FORE, bold: true);
 		private readonly Format badCharBlockFormat = new (backgroundColor: VARS.BAD_CHAR_BACK, foregroundColor: VARS.BAD_CHAR_FORE, bold: true);
 
-		public bool Play (Offset offset)
+		public int Play (Offset offset)
 		{
 			int turn = 1;
 			bool hasWon = false;
@@ -41,7 +41,7 @@ namespace Turtle {
 				turn++;
 			}
 
-			return hasWon;
+			return hasWon ? turn - 1 : -1;
 		}
 
 		public int DrawKeyboard (Offset offset)
@@ -91,6 +91,27 @@ namespace Turtle {
 			turtle.Draw (offset.X, offset.Y);
 
 			return VARS.TITLE.Split (Environment.NewLine).Length;
+		}
+
+		public string GetGameStateResult(int turn)
+		{
+			var stateBuilder = new StringBuilder ();
+			var finalTurn = turn == -1 ? "X" : turn.ToString ();
+			stateBuilder.AppendLine ($"Turtle {this.Seed} ({this.currentGenerator.Name}) {finalTurn}/{this.currentGenerator.MaxTurns}");
+			stateBuilder.AppendLine ();
+
+			foreach (var gameLine in this.GameState) {
+				if (gameLine == null) continue;
+
+				var line = gameLine.Select (l => this.getEmojiHint (l.Hint));
+
+				stateBuilder.AppendLine (String.Join ("", line));
+			}
+
+			stateBuilder.AppendLine ();
+			stateBuilder.AppendLine ($"Find this game in: {VARS.REPO}");
+
+			return stateBuilder.ToString ();
 		}
 
 		private (bool validWord, bool hasWon) handleInput (ref StringBuilder wordBuilder, int turn)
@@ -201,6 +222,13 @@ namespace Turtle {
 			HintMode.BadPosition => this.badPosBlockFormat,
 			HintMode.GoodPosition => this.goodPosBlockFormat,
 			_ => this.emptyBlockFormat
+		};
+
+		private string getEmojiHint (HintMode c) => c switch {
+			HintMode.BadCharacter => "⬛",
+			HintMode.BadPosition => "🟨",
+			HintMode.GoodPosition => "🟩",
+			_ => "⬛"
 		};
 	}
 }
