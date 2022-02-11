@@ -11,15 +11,17 @@
     <None Remove="Generators\" />
     <None Remove="Graphics\" />
     <None Remove="Environment\" />
-    <None Remove="Generators\Fetch\" />
+    <None Remove="Microsoft.CodeAnalysis.CSharp.Scripting" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Generators\" />
     <Folder Include="Graphics\" />
     <Folder Include="Env\" />
-    <Folder Include="Generators\Fetch\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.1.0-3.final" />
   </ItemGroup>
 </Project>
