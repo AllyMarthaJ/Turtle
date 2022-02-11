@@ -15,13 +15,14 @@ namespace Turtle {
 		{
 			int turn = 1;
 			bool hasWon = false;
-			var position = Console.GetCursorPosition ();
 
-			while (turn < currentGenerator.MaxTurns && !hasWon) {
+			while (turn <= currentGenerator.MaxTurns && !hasWon) {
 				// render
 				drawGrid (turn);
 				// user input
 				Console.ReadKey (true);
+
+				turn++;
 			}
 		}
 
@@ -30,29 +31,24 @@ namespace Turtle {
 			if (String.IsNullOrWhiteSpace (this.block))
 				this.block = getBlock (BLOCK_WIDTH, BLOCK_HEIGHT);
 
-			var emptyBlockFormat = new Format (backgroundColor: new Color (TerminalMode.Background, rnd.Next (1, 25)),
+			var emptyBlockFormat = new Format (backgroundColor: new Color (TerminalMode.Background, 4),
 							   foregroundColor: new Color (TerminalMode.Foreground, 24));
 
 			FormattedString emptyBlock = block;
 			emptyBlock.Formats.Add (new Regex (".*"), emptyBlockFormat);
 
-			for (int j = 0; j < this.currentGenerator.MaxTurns; j++) {
-				for (int i = 0; i <= this.Solution.Length; i++) {
+			for (int y = 0; y < this.currentGenerator.MaxTurns; y++) {
+				for (int x = 0; x < this.Solution.Length; x++) {
+					int blockX = x * (BLOCK_WIDTH + 2);
+					int blockY = y * (BLOCK_HEIGHT + 1);
 
-					// ConsoleHelpers.WriteInPlace(emptyBlock, new Offset(x: 10, y: 10));
-					// ConsoleHelpers.WriteInPlace(emptyBlock, new Position(x: 10)); // or new Position(x: 10, y:10);
-					ConsoleHelpers.WriteInPlace (emptyBlock, new Offset(i * (BLOCK_WIDTH + 2), j * (BLOCK_HEIGHT + 1)));
+					ConsoleHelpers.WriteInPlace (emptyBlock, new Offset (blockX, blockY));
 
-					//FormattedString h = "h";
-					//h.Formats.Add (new Regex (".*"), emptyBlockFormat);
+					FormattedString h = ".";
+					h.Formats.Add (new Regex (".*"), emptyBlockFormat);
 
+					ConsoleHelpers.WriteInPlace (h, new Offset (blockX + 2, blockY + 1));
 				}
-
-				//if (j == turn - 1) {
-				//	Console.CursorTop++;
-				//	Console.Write (" < ");
-				//	Console.CursorTop--;
-				//}
 			}
 		}
 
