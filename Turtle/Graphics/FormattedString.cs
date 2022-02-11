@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Text.RegularExpressions;
+using Turtle.Env;
 
 namespace Turtle.Graphics {
 	public class FormattedString {
@@ -40,10 +41,10 @@ namespace Turtle.Graphics {
 				tmpLine = format.Key.Replace (tmpLine, m => {
 					var fmtBuilder = format.Value.GetFormatBuilder ();
 
-					fmtBuilder.Insert (0, ConsoleHelpers.ANSI_PREFIX);
+					fmtBuilder.Insert (0, VARS.ANSI_PREFIX);
 					fmtBuilder.Append (m.Value);
 					if (format.Value.ResetAfter) {
-						fmtBuilder.Append (ConsoleHelpers.ANSI_PREFIX);
+						fmtBuilder.Append (VARS.ANSI_PREFIX);
 						fmtBuilder.Append (RESET_FORMAT);
 					}
 
