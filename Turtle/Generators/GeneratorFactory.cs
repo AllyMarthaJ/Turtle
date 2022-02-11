@@ -16,6 +16,14 @@ namespace Turtle.Generators {
 		public async Task<string> GetGeneratorSource (string urlOrUuid)
 		{
 			string url = urlOrUuid;
+			bool isRepo = false;
+
+			// try and fetch something locally
+			if (!Directory.Exists("generators")) 
+				Directory.CreateDirectory ("generators");
+			var localGen = Path.Combine ("generators", $"{url}.turtle");
+			if (File.Exists (localGen))
+				return await File.ReadAllTextAsync (localGen);
 
 			// if we fail to create a uri, fetch the repo and then grab the relevant url
 			if (!Uri.TryCreate (urlOrUuid, UriKind.Absolute, out _)) {
@@ -24,11 +32,16 @@ namespace Turtle.Generators {
 				if (!repo.ContainsKey (url))
 					throw new Exception ("This generator wasn't found.");
 				url = repo [url];
+				isRepo = true;
 			}
 
 			// make a request to either the repo url, or direct url
 			var sourceResp = await fetchClient.GetAsync (url);
-			return await sourceResp.Content.ReadAsStringAsync ();
+			var source = await sourceResp.Content.ReadAsStringAsync ();
+			if (isRepo)
+				await File.WriteAllTextAsync (localGen, source);
+
+			return source;
 		}
 
 		private async Task<Dictionary<string, string>> fetchRepository ()
