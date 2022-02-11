@@ -112,7 +112,9 @@ namespace Turtle.Graphics {
 			if (m.Groups.Count < 3)
 				throw new ArgumentException ("Invalid color command.");
 			var command = m.Groups [1].Value.ToLower ();
-			var args = m.Groups [2].Value.Split (";");
+			var args = m.Groups [2].Value.Split (",");
+
+			Console.WriteLine (String.Join (", ", args));
 
 			switch (command) {
 			case "rgb6bit":
