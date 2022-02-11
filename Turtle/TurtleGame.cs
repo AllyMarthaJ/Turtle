@@ -31,26 +31,26 @@ namespace Turtle {
 			this.MustContain = new List<char> ();
 		}
 
-		public HintMode [] ValidateAndUpdateUpstream (string input)
+		public CharHint [] ValidateAndUpdateUpstream (string input)
 		{
 			// length validation
 			if (input.Length != this.Solution.Length) {
-				return Array.Empty<HintMode> ();
+				return Array.Empty<CharHint> ();
 			}
 
 			// generator input validation
 			if (!this.currentGenerator.ValidateInput(input)) {
-				return Array.Empty<HintMode> ();
+				return Array.Empty<CharHint> ();
 			}
 
 			var hints = this.CompareUpstream (input);
 
 			// hardmode validation
 			if (this.HardMode && !UpdateWithHardmode (input, hints)) {
-				return Array.Empty<HintMode> ();
+				return Array.Empty<CharHint> ();
 			}
 
-			return hints.Select (e => e.Hint).ToArray ();
+			return hints;
 		}
 
 		public CharHint [] CompareUpstream (string input)

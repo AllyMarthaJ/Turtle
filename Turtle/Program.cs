@@ -8,7 +8,7 @@ public class Program {
 	{
 		ConsoleHelpers.AlternateScreen = true;
 		var generator = new ExampleGenerator ();
-		var game = new TurtleGame (generator);
+		var game = new TurtleGame (generator, 0);
 		game.Play ();
 		ConsoleHelpers.AlternateScreen = false;
 		Console.CancelKeyPress += (o, e) => {

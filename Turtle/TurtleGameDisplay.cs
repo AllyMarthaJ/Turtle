@@ -8,7 +8,7 @@ namespace Turtle {
 	public partial class TurtleGame {
 		private const int BLOCK_WIDTH = 5;
 		private const int BLOCK_HEIGHT = 3;
-		private string block;
+		private string block = String.Empty;
 		Random rnd = new Random ();
 
 		public void Play ()
