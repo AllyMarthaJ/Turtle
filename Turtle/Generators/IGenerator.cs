@@ -3,6 +3,9 @@ namespace Turtle.Generators {
 	public interface IGenerator {
 		public int MaxTurns { get; }
 
+		public string Name { get; }
+		public string Author { get; }
+
 		public (char displayKey, ConsoleKey inputKey, int rowNum) [] Keys { get; set; }
 
 		/// <summary>

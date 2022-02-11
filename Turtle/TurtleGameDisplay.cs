@@ -19,57 +19,24 @@ namespace Turtle {
 		private readonly Format badCharBlockFormat = new (backgroundColor: new Color (TerminalMode.Background, 5, 3, 3, false),
 							       foregroundColor: new Color (TerminalMode.Foreground, ColorName.Black), bold: true);
 
-		public void Play (Offset offset)
+		public bool Play (Offset offset)
 		{
 			int turn = 1;
 			bool hasWon = false;
+
+			// render
+			drawGrid (turn, String.Empty, offset);
 
 			while (turn <= currentGenerator.MaxTurns && !hasWon) {
 				// handle character input
 				bool validWord = false;
 				StringBuilder wordBuilder = new ();
 
-				drawGrid (turn, wordBuilder.ToString (), offset);
-
 				while (!validWord) {
-					// user input
-					var input = Console.ReadKey (true);
+					var result = handleInput (ref wordBuilder, turn);
 
-					// check if valid key
-					if (this.currentGenerator.Keys.Where (k => k.inputKey == input.Key).Count () > 0) {
-						if (wordBuilder.Length >= this.Solution.Length) {
-							continue;
-						}
-
-						wordBuilder.Append (Char.ToLower (input.KeyChar));
-					} else if (input.Key == ConsoleKey.Delete || input.Key == ConsoleKey.Backspace) {
-						if (wordBuilder.Length == 0) {
-							continue;
-						}
-						wordBuilder.Remove (wordBuilder.Length - 1, 1);
-					} else if (input.Key == ConsoleKey.Enter) {
-						// submit word
-						var wordResult = this.ValidateAndUpdateUpstream (wordBuilder.ToString ());
-
-						if (wordResult.Length == 0) {
-							// only clear the buffer if we've written a full word
-							if (wordBuilder.Length != this.Solution.Length) {
-								continue;
-							}
-							wordBuilder.Clear ();
-
-						} else {
-							// we've got a valid word!
-							validWord = true;
-
-							if (wordBuilder.ToString ().Equals (this.Solution, StringComparison.OrdinalIgnoreCase)) {
-								hasWon = true;
-							}
-
-							// chuck the check in the gamestate
-							this.GameState [turn - 1] = wordResult;
-						}
-					}
+					validWord = result.validWord;
+					hasWon = result.hasWon;
 
 					// render
 					drawGrid (turn, wordBuilder.ToString (), offset);
@@ -77,6 +44,101 @@ namespace Turtle {
 
 				turn++;
 			}
+
+			return hasWon;
+		}
+
+		public int DrawKeyboard(Offset offset)
+		{
+			var rows = this.currentGenerator.Keys.Select (k => k.rowNum).Distinct ().ToArray ();
+
+			FormattedString fmtKey = new ("Keys   :");
+			fmtKey.Formats.Add (new Regex ("[\\[\\]]"), new Format (
+					faint: true
+				));
+			fmtKey.Draw (offset.X, offset.Y);
+
+			for (int i = 0; i < rows.Length; i++) {
+				// where y is rows[i]
+				var keys = this.currentGenerator.Keys.Where (k => k.rowNum == rows [i]).ToArray();
+
+				for (int x = 0; x < keys.Length; x++) {
+					fmtKey.RawValue = $"[{keys [x].displayKey.ToString()}]";
+					fmtKey.Draw (4 * x + offset.X + 9, rows [i] + offset.Y);
+				}
+			}
+
+			return rows.Length;
+		}
+
+
+		public int DrawStyledTurtle (Offset offset)
+		{
+			FormattedString turtle = VARS.TITLE;
+
+			turtle.Formats.Add (new Regex ("(?<![a-zA-Z(:/)])[\\\\/|]"), new Format (
+					bold: true,
+					foregroundColor: new Color (TerminalMode.Foreground, 5, 3, 5, false)
+				));
+			turtle.Formats.Add (new Regex ("_"), new Format (
+					bold: true,
+					foregroundColor: new Color (TerminalMode.Foreground, 4, 3, 5, false),
+					underline: true
+				));
+			turtle.Formats.Add (new Regex ("http(.*)/"), new Format (
+					underline: true
+				));
+
+			turtle.Draw (offset.X, offset.Y);
+
+			return VARS.TITLE.Split (Environment.NewLine).Length;
+		}
+
+		private (bool validWord, bool hasWon) handleInput (ref StringBuilder wordBuilder, int turn)
+		{
+			// user input
+			var input = Console.ReadKey (true);
+
+			bool validWord = false, hasWon = false;
+
+			// check if valid key
+			if (this.currentGenerator.Keys.Where (k => k.inputKey == input.Key).Count () > 0) {
+				if (wordBuilder.Length >= this.Solution.Length) {
+					return (validWord, hasWon);
+				}
+
+				wordBuilder.Append (Char.ToLower (input.KeyChar));
+			} else if (input.Key == ConsoleKey.Delete || input.Key == ConsoleKey.Backspace) {
+				if (wordBuilder.Length == 0) {
+					return (validWord, hasWon);
+				}
+
+				wordBuilder.Remove (wordBuilder.Length - 1, 1);
+			} else if (input.Key == ConsoleKey.Enter) {
+				// submit word
+				var wordResult = this.ValidateAndUpdateUpstream (wordBuilder.ToString ());
+
+				if (wordResult.Length == 0) {
+					// only clear the buffer if we've written a full word
+					if (wordBuilder.Length != this.Solution.Length) {
+						return (validWord, hasWon);
+					}
+					wordBuilder.Clear ();
+
+				} else {
+					// we've got a valid word!
+					validWord = true;
+
+					if (wordBuilder.ToString ().Equals (this.Solution, StringComparison.OrdinalIgnoreCase)) {
+						hasWon = true;
+					}
+
+					// chuck the check in the gamestate
+					this.GameState [turn - 1] = wordResult;
+				}
+			}
+
+			return (validWord, hasWon);
 		}
 
 		// TODO: Instead of rendering entire grid in parts, a StringBuilder will store the entire grid.
