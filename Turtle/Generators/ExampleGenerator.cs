@@ -34,7 +34,7 @@ namespace Turtle.Generators {
 		public string GenerateSolution (int seed)
 		{
 			var generator = new Random (seed);
-			Console.WriteLine ("Bunny is always right. I should listen to her more often");
+			//Console.WriteLine ("Bunny is always right. I should listen to her more often");
 			return exampleWords [generator.Next (exampleWords.Length)];
 		}
 
