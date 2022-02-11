@@ -2,7 +2,7 @@
 using System.Text;
 
 namespace Turtle.Graphics {
-	public class ConsoleHelpers {
+	public static class ConsoleHelpers {
 		public const string ANSI_PREFIX = "\x1b[";
 
 		private static bool alternate = false;
@@ -42,6 +42,11 @@ namespace Turtle.Graphics {
 					-rawLines.Length + 1 - initOffset.Y))
 				;
 			Console.Write (ret);
+		}
+
+		public static void Draw (this FormattedString input, Offset offset)
+		{
+			WriteInPlace (input, offset);
 		}
 
 		public static string GetPositionedString (string str, Offset offset)
