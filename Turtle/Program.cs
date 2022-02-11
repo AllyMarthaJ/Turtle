@@ -5,12 +5,16 @@ using Turtle.Generators;
 using Turtle.Graphics;
 
 public class Program {
-	public static void Main (string [] args)
+	public static async Task Main (string [] args)
 	{
+		var gf = new GeneratorFactory (new HttpClient ());
+		var source = await gf.GetGeneratorSource ("example");
+		var gen = await gf.CompileGeneratorSource (source);
+
 		int verticalIncrement = 1;
 		ConsoleHelpers.AlternateScreen = true;
 
-		var game = new TurtleGame (new ExampleGenerator (), 0);
+		var game = new TurtleGame (gen, 0);
 
 		// game behaviour and display config
 		game.HardMode = VARS.HARD_MODE;

@@ -52,7 +52,10 @@ namespace Turtle.Generators {
 		public async Task<IGenerator> CompileGeneratorSource (string source)
 		{
 			var scriptResult = await CSharpScript
-						.Create (source, ScriptOptions.Default.WithReferences (typeof (IGenerator).Assembly))
+						.Create (source,
+							ScriptOptions.Default
+								.WithReferences (typeof (IGenerator).Assembly)
+								.WithImports("System", "Turtle.Generators"))
 						.RunAsync();
 			return (IGenerator)scriptResult.ReturnValue;
 		}
