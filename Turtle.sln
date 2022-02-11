@@ -5,6 +5,8 @@ VisualStudioVersion = 25.0.1700.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Turtle", "Turtle\Turtle.csproj", "{9E41B487-3EBD-4164-89BE-21D71677CA9C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{0BF5966C-511C-44FA-BC62-DC2BAE25FC57}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{9E41B487-3EBD-4164-89BE-21D71677CA9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E41B487-3EBD-4164-89BE-21D71677CA9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E41B487-3EBD-4164-89BE-21D71677CA9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BF5966C-511C-44FA-BC62-DC2BAE25FC57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BF5966C-511C-44FA-BC62-DC2BAE25FC57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BF5966C-511C-44FA-BC62-DC2BAE25FC57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BF5966C-511C-44FA-BC62-DC2BAE25FC57}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
