@@ -14,6 +14,7 @@ namespace Turtle {
 		// gamestate
 		public char [] GoodPositions { get; }
 		public List<char> MustContain { get; }
+		public CharHint [] [] GameState { get; }
 
 		public TurtleGame (IGenerator generator, bool hard = false) :
 			this (generator, (DateTime.UtcNow - DateTime.UnixEpoch).Milliseconds, hard)
@@ -29,6 +30,7 @@ namespace Turtle {
 
 			this.GoodPositions = new char [this.Solution.Length];
 			this.MustContain = new List<char> ();
+			this.GameState = new CharHint [this.currentGenerator.MaxTurns][];
 		}
 
 		public CharHint [] ValidateAndUpdateUpstream (string input)
@@ -39,7 +41,7 @@ namespace Turtle {
 			}
 
 			// generator input validation
-			if (!this.currentGenerator.ValidateInput(input)) {
+			if (!this.currentGenerator.ValidateInput (input)) {
 				return Array.Empty<CharHint> ();
 			}
 
@@ -66,7 +68,7 @@ namespace Turtle {
 			var hints = new CharHint [this.Solution.Length];
 
 			for (int i = 0; i < input.Length; i++) {
-				if (this.Solution [i] == input [i] && deductSolution.Contains(input[i])) {
+				if (this.Solution [i] == input [i] && deductSolution.Contains (input [i])) {
 					// 1. check equal position
 					// 2. going from left-to-right means we might have already
 					// used a letter but in the wrong place, so we don't want to give the impression
@@ -87,13 +89,13 @@ namespace Turtle {
 			return hints;
 		}
 
-		public bool UpdateWithHardmode(string input, CharHint[] hints)
+		public bool UpdateWithHardmode (string input, CharHint [] hints)
 		{
 			// validation on hardmode
 			// NOTE: **we used to have an equivalent deny list**
 			// reasons we don't do this: tracking duplicate letters, tracking duplicate inputs.
 			for (int i = 0; i < hints.Length; i++) {
-				if (this.GoodPositions[i] != '\0' && this.GoodPositions [i] != hints [i].Entry)
+				if (this.GoodPositions [i] != '\0' && this.GoodPositions [i] != hints [i].Entry)
 					return false;
 
 				foreach (var l in this.MustContain) {

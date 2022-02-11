@@ -10,13 +10,13 @@ public class Program {
 		var generator = new ExampleGenerator ();
 		var game = new TurtleGame (generator, 0);
 		game.Play ();
+		Console.ReadKey (true);
 		ConsoleHelpers.AlternateScreen = false;
 		Console.CancelKeyPress += (o, e) => {
 			e.Cancel = true;
 			Console.WriteLine ("HELLO");
 			ConsoleHelpers.AlternateScreen = false;
 		};
-
 		//var progress = new int [10];
 
 		//Random rnd = new ();

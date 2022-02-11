@@ -3,7 +3,7 @@ namespace Turtle.Generators {
 	public interface IGenerator {
 		public int MaxTurns { get; }
 
-		public KeyboardRow KeyboardRows { get; }
+		public (char displayKey, ConsoleKey inputKey, int rowNum) [] Keys { get; set; }
 
 		/// <summary>
 		/// Stateless input validation.

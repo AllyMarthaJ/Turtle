@@ -15,11 +15,21 @@ namespace Turtle.Generators {
 
 		public ExampleGenerator ()
 		{
+			this.setKeys ();
 		}
 
 		public int MaxTurns { get; } = 3;
 
-		public KeyboardRow KeyboardRows { get; } = new ();
+		public (char displayKey, ConsoleKey inputKey, int rowNum) [] Keys { get; set; }
+
+		private void setKeys ()
+		{
+			this.Keys = new (char displayKey, ConsoleKey inputKey, int rowNum) [26];
+
+			for (int i = 0; i < 26; i++) {
+				this.Keys [i] = ((char)('a' + i), Enum.Parse<ConsoleKey> (((char)('A' + i)).ToString ()), 0);
+			}
+		}
 
 		public string GenerateSolution (int seed)
 		{
