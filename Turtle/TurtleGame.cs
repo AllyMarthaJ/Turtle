@@ -2,8 +2,8 @@
 using Turtle.Generators;
 
 namespace Turtle {
-	public class TurtleGame {
-		private readonly IGenerator currentGenerator;
+	public partial class TurtleGame {
+		protected readonly IGenerator currentGenerator;
 
 		public int Seed { get; }
 
