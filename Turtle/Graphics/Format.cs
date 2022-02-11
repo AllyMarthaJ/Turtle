@@ -50,6 +50,7 @@ namespace Turtle.Graphics {
 			
 			sb.Remove (sb.Length - 1, 1);
 			sb.Append ('m');
+
 			return sb;
 		}
 	}

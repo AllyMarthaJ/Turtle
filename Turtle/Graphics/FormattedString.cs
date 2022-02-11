@@ -4,7 +4,6 @@ using System.Text.RegularExpressions;
 
 namespace Turtle.Graphics {
 	public class FormattedString {
-		public const string ANSI_PREFIX = "\x1b[";
 		public readonly StringBuilder RESET_FORMAT = new Format ().GetFormatBuilder ();
 
 		public string RawValue { get; set; }
@@ -40,10 +39,10 @@ namespace Turtle.Graphics {
 				tmpLine = format.Key.Replace (tmpLine, m => {
 					var fmtBuilder = format.Value.GetFormatBuilder ();
 
-					fmtBuilder.Insert (0, ANSI_PREFIX);
+					fmtBuilder.Insert (0, ConsoleHelpers.ANSI_PREFIX);
 					fmtBuilder.Append (m.Value);
 					if (format.Value.ResetAfter) {
-						fmtBuilder.Append (ANSI_PREFIX);
+						fmtBuilder.Append (ConsoleHelpers.ANSI_PREFIX);
 						fmtBuilder.Append (RESET_FORMAT);
 					}
 
