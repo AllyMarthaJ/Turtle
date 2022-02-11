@@ -8,7 +8,7 @@ using Turtle.Graphics;
 namespace Turtle {
 	public partial class TurtleGame {
 		private string block = String.Empty;
-		Random rnd = new Random ();
+		Random rnd = new ();
 
 		private readonly Format emptyBlockFormat = new (backgroundColor: VARS.DEFAULT_BACK, foregroundColor: VARS.DEFAULT_FORE, bold: true);
 		private readonly Format goodPosBlockFormat = new (backgroundColor: VARS.GOOD_CHAR_BACK, foregroundColor: VARS.GOOD_CHAR_FORE, bold: true);
