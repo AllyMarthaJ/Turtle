@@ -7,17 +7,20 @@ using Turtle.Graphics;
 public class Program {
 	public static async Task Main (string [] args)
 	{
+		// fetch our generator
 		var gf = new GeneratorFactory (new HttpClient ());
-		var source = await gf.GetGeneratorSource ("example");
-		var gen = await gf.CompileGeneratorSource (source);
+
+		var source = await gf.GetGeneratorSource (VARS.GAME);
+		var generator = await gf.CompileGeneratorSource (source);
 
 		int verticalIncrement = 1;
 		ConsoleHelpers.AlternateScreen = true;
 
-		var game = new TurtleGame (gen, 0);
-
 		// game behaviour and display config
-		game.HardMode = VARS.HARD_MODE;
+		TurtleGame game = VARS.SEED == 0 ?
+			new TurtleGame (generator, VARS.HARD_MODE) :
+			new (generator, VARS.SEED, VARS.HARD_MODE);
+
 		if (VARS.SHOW_TITLE)
 			verticalIncrement += game.DrawStyledTurtle (new Offset (1, verticalIncrement)) + 1;
 		if (VARS.SHOW_KEYBOARD)

@@ -21,6 +21,8 @@ namespace Turtle.Generators {
 			if (!Uri.TryCreate (urlOrUuid, UriKind.Absolute, out _)) {
 				var repo = await this.fetchRepository ();
 
+				if (!repo.ContainsKey (url))
+					throw new Exception ("This generator wasn't found.");
 				url = repo [url];
 			}
 
