@@ -51,7 +51,7 @@ namespace Turtle.Graphics {
 		public static string GetPositionedString (string str, Offset offset)
 		{
 			foreach (var offsetBuilder in offset.GetOffsetBuilders ()) {
-				offsetBuilder.Insert (0, ConsoleHelpers.ANSI_PREFIX);
+				offsetBuilder.Insert (0, VARS.ANSI_PREFIX);
 				offsetBuilder.Append (str);
 				str = offsetBuilder.ToString ();
 			}
