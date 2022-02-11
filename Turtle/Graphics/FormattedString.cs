@@ -22,6 +22,7 @@ namespace Turtle.Graphics {
 			foreach (var line in s.RawValue.Split (Environment.NewLine)) {
 				sb.AppendLine (s.formatLine (line));
 			}
+			sb.Remove (sb.Length - 1, 1);
 
 			return sb.ToString ();
 		}
