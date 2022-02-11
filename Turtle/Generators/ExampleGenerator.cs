@@ -19,7 +19,7 @@ namespace Turtle.Generators {
 
 		public int MaxTurns { get; } = 3;
 
-		public KeyboardRow [] KeyboardRows { get; } = Array.Empty<KeyboardRow>();
+		public KeyboardRow KeyboardRows { get; } = new ();
 
 		public string GenerateSolution (int seed)
 		{
