@@ -11,7 +11,9 @@ This binary is not cross-platform, but is self-contained and can be shared.
 Turtle can be started by running `./Turtle` in whichever directory the binary is located in. You'll be good to go, except for configuration of the game itself.
 
 # Configuration
-Turtle uses environment variables for configuration, as most pertain to display or handling connections.
+~~Turtle uses environment variables for configuration, as most pertain to display or handling connections.~~
+
+Turtle has both the option to use environment variables, or command line arguments which override these variables.
 ```
 ANSI_PREFIX = "\x1b[" // Describes what characters to use. String.
 
@@ -29,14 +31,16 @@ BAD_POS_FORE = legacy(Black) // The foreground colour for bad positions. Color.
 GOOD_CHAR_BACK = rgb6bit(3,4,1) // The background colour for good characters. Color.
 GOOD_CHAR_FORE = legacy(Black) // The foreground colour for good characters. Color.
 DEFAULT_BACK = gray(4) // The background colour for empty blocks. Color.
-DEFAULT_FORE = legacy(White) // The foreground colour fore empty blocks. Color.
+DEFAULT_FORE = legacy(White) // The foreground colour for empty blocks. Color.
 
-REPO = "https://raw.githubusercontent.com/AllyMarthaJ/OpenTurtleGenerators/master/generators.json" // The repo to fetch named games from. String.
+REPO = ["https://raw.githubusercontent.com/AllyMarthaJ/OpenTurtleGenerators/master/generators.json"] // The repos to fetch named games from. Load order matters for duplicate named games! String.
 STORE_GENERATOR = true // Whether or not to save named fetched games. Boolean.
 
 GAME = "example" // The name of the generator to use/game to play. String.
 SEED = 0 // The seed to use. 0 for today's. Integer.
 ```
+
+Refer to this documentation for command line argument defaults.
 
 ## Colours
 There is a set of colour syntaxes used to support a variety of terminals:
