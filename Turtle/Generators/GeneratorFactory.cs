@@ -27,7 +27,7 @@ namespace Turtle.Generators {
 
 			// if we fail to create a uri, fetch the repo and then grab the relevant url
 			if (!Uri.TryCreate (urlOrUuid, UriKind.Absolute, out _)) {
-				var repo = await this.fetchRepository ();
+				var repo = await this.FetchRepository ();
 
 				if (!repo.ContainsKey (url))
 					throw new Exception ("This generator wasn't found.");
@@ -44,7 +44,7 @@ namespace Turtle.Generators {
 			return source;
 		}
 
-		private async Task<Dictionary<string, string>> fetchRepository ()
+		public async Task<Dictionary<string, string>> FetchRepository ()
 		{
 			// fetch the repo
 			var response = await fetchClient.GetAsync (VARS.REPO);
