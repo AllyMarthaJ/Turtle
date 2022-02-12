@@ -116,9 +116,6 @@ namespace Turtle {
 				stateBuilder.AppendLine (String.Join ("", line));
 			}
 
-			stateBuilder.AppendLine ();
-			stateBuilder.AppendLine ($"Find this game in: {VARS.REPO}");
-
 			return stateBuilder.ToString ();
 		}
 

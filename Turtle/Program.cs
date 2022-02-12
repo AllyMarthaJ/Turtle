@@ -1,19 +1,40 @@
-﻿using System.Text.RegularExpressions;
-using Turtle;
+﻿using Turtle;
 using Turtle.Env;
 using Turtle.Generators;
 using Turtle.Graphics;
 
 public class Program {
-	public static async Task Main (string [] args)
+	public static async Task Main (string? AnsiPrefix = null,
+				       int? BlockWidth = null,
+				       int? BlockHeight = null,
+				       bool? ShowTitle = null,
+				       bool? ShowKeyboard = null,
+				       bool? HardMode =null,
+				       string? BadCharBack = null,
+				       string? BadCharFore = null,
+				       string? BadPosBack = null,
+				       string? BadPosFore = null,
+				       string? GoodCharBack =null,
+				       string? GoodCharFore = null,
+				       string? DefaultBack = null,
+				       string? DefaultFore = null,
+				       string? Repo = null,
+				       bool? StoreGenerator = null,
+				       string? Game = null,
+				       int? Seed = null)
 	{
-		// fetch our generator
-		var gf = new GeneratorFactory (new HttpClient ());
+		// loads command line arguments instead of environment variables, where applicable
+		VARS.OverrideEnvironment (AnsiPrefix,
+					  BlockWidth, BlockHeight,
+					  ShowTitle, ShowKeyboard, HardMode,
+					  BadCharBack, BadCharFore,
+					  BadPosBack, BadPosFore,
+					  GoodCharBack, GoodCharFore,
+					  DefaultBack, DefaultFore,
+					  Repo, StoreGenerator,
+					  Game, Seed);
 
-		var source = await gf.GetGeneratorSource (VARS.GAME);
-		var generator = await gf.CompileGeneratorSource (source);
-
-		// setting up game environment
+		// setting up screen processing
 		int verticalIncrement = 1;
 		ConsoleHelpers.AlternateScreen = true;
 
@@ -21,8 +42,16 @@ public class Program {
 			ConsoleHelpers.AlternateScreen = false;
 		};
 
+		var gf = new GeneratorFactory (new HttpClient ());
+		IGenerator generator;
+
 		try {
-			// game behaviour and display config
+			// fetch generator for game
+			var source = await gf.GetGeneratorSource (VARS.GAME);
+
+			generator = await gf.CompileGeneratorSource (source);
+
+			// set up game behaviour and display config
 			TurtleGame game = VARS.SEED == 0 ?
 				new TurtleGame (generator, VARS.HARD_MODE) :
 				new (generator, VARS.SEED, VARS.HARD_MODE);
@@ -34,8 +63,10 @@ public class Program {
 
 			var gameResult = game.Play (new Offset (2, verticalIncrement));
 
+			// game's finished, let the person relish in their win/loss
 			Console.ReadKey (true);
 
+			// return to normal and print out an emoji friendly result
 			ConsoleHelpers.AlternateScreen = false;
 			Console.WriteLine (game.GetGameStateResult (gameResult));
 		} catch (Exception ex) {
