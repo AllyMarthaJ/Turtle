@@ -4,35 +4,63 @@ using Turtle.Generators;
 using Turtle.Graphics;
 
 public class Program {
+	/// <summary>
+	/// Turtle, a total not-clone of a game that was purchased by NYT recently. See README.
+	/// </summary>
+	/// <param name="AnsiPrefix">Describes what characters to use.</param>
+	/// <param name="BlockWidth">Width of each grid block.</param>
+	/// <param name="BlockHeight">Height of each grid block.</param>
+	/// <param name="ShowTitle">Shows or hides the title.</param>
+	/// <param name="ShowKeyboard">Shows or hides the keyboard.</param>
+	/// <param name="HardMode">Enables or disables hardmode.</param>
+	/// <param name="BadCharBack">The background colour for bad characters.</param>
+	/// <param name="BadCharFore">The foreground colour for bad characters.</param>
+	/// <param name="BadPosBack">The background colour for bad positions.</param>
+	/// <param name="BadPosFore">The foreground colour for bad positions.</param>
+	/// <param name="GoodCharBack">The background colour for good characters.</param>
+	/// <param name="GoodCharFore">The foreground colour for good characters.</param>
+	/// <param name="DefaultBack">The background colour for empty blocks.</param>
+	/// <param name="DefaultFore">The foreground colour for empty blocks.</param>
+	/// <param name="Repo">The repo to fetch named games from.</param>
+	/// <param name="StoreGenerator">Whether or not to save named fetched games.</param>
+	/// <param name="Game">The name of the generator to use/game to play.</param>
+	/// <param name="Seed">The seed to use. 0 for today's.</param>
+	/// <returns></returns>
 	public static async Task Main (string? AnsiPrefix = null,
 				       int? BlockWidth = null,
 				       int? BlockHeight = null,
 				       bool? ShowTitle = null,
 				       bool? ShowKeyboard = null,
-				       bool? HardMode =null,
+				       bool? HardMode = null,
 				       string? BadCharBack = null,
 				       string? BadCharFore = null,
 				       string? BadPosBack = null,
 				       string? BadPosFore = null,
-				       string? GoodCharBack =null,
+				       string? GoodCharBack = null,
 				       string? GoodCharFore = null,
 				       string? DefaultBack = null,
 				       string? DefaultFore = null,
 				       string? Repo = null,
 				       bool? StoreGenerator = null,
 				       string? Game = null,
-				       int? Seed = null)
+				       int? Seed = null,
+				       bool ListGames = false,
+				       string? FetchGame = null)
 	{
-		// loads command line arguments instead of environment variables, where applicable
-		VARS.OverrideEnvironment (AnsiPrefix,
-					  BlockWidth, BlockHeight,
-					  ShowTitle, ShowKeyboard, HardMode,
-					  BadCharBack, BadCharFore,
-					  BadPosBack, BadPosFore,
-					  GoodCharBack, GoodCharFore,
-					  DefaultBack, DefaultFore,
-					  Repo, StoreGenerator,
-					  Game, Seed);
+		// loading environment
+		var gf = new GeneratorFactory (new HttpClient ());
+
+		if (!await handleCommandLineArgs (gf, AnsiPrefix,
+						BlockWidth, BlockHeight,
+						ShowTitle, ShowKeyboard, HardMode,
+						BadCharBack, BadCharFore,
+						BadPosBack, BadPosFore,
+						GoodCharBack, GoodCharFore,
+						DefaultBack, DefaultFore,
+						Repo, StoreGenerator,
+						Game, Seed,
+						ListGames, FetchGame))
+			return;
 
 		// setting up screen processing
 		int verticalIncrement = 1;
@@ -42,7 +70,6 @@ public class Program {
 			ConsoleHelpers.AlternateScreen = false;
 		};
 
-		var gf = new GeneratorFactory (new HttpClient ());
 		IGenerator generator;
 
 		try {
@@ -74,5 +101,65 @@ public class Program {
 			Console.WriteLine ("Message: " + ex.Message);
 			Console.WriteLine ("More details: " + ex.InnerException ?? "None available.");
 		}
+	}
+
+	private static async Task<bool> handleCommandLineArgs (GeneratorFactory gf,
+						   string? AnsiPrefix = null,
+						   int? BlockWidth = null,
+						   int? BlockHeight = null,
+						   bool? ShowTitle = null,
+						   bool? ShowKeyboard = null,
+						   bool? HardMode = null,
+						   string? BadCharBack = null,
+						   string? BadCharFore = null,
+						   string? BadPosBack = null,
+						   string? BadPosFore = null,
+						   string? GoodCharBack = null,
+						   string? GoodCharFore = null,
+						   string? DefaultBack = null,
+						   string? DefaultFore = null,
+						   string? Repo = null,
+						   bool? StoreGenerator = null,
+						   string? Game = null,
+						   int? Seed = null,
+						   bool ListGames = false,
+						   string? FetchGame = null)
+	{
+		// loads command line arguments instead of environment variables, where applicable
+		VARS.OverrideEnvironment (AnsiPrefix,
+					  BlockWidth, BlockHeight,
+					  ShowTitle, ShowKeyboard, HardMode,
+					  BadCharBack, BadCharFore,
+					  BadPosBack, BadPosFore,
+					  GoodCharBack, GoodCharFore,
+					  DefaultBack, DefaultFore,
+					  Repo, StoreGenerator,
+					  Game, Seed);
+
+
+		if (ListGames) {
+			try {
+				foreach (var game in await gf.FetchRepository ()) {
+					Console.WriteLine ($"{game.Key}, {game.Value}");
+				}
+				return false;
+			} catch { }
+		}
+
+		if (FetchGame != null) {
+			try {
+				var source = await gf.GetGeneratorSource (FetchGame);
+
+				var generator = await gf.CompileGeneratorSource (source);
+
+				Console.WriteLine ("Source   : " + FetchGame);
+				Console.WriteLine ("Name     : " + generator.Name);
+				Console.WriteLine ("Author   : " + generator.Author);
+
+				return false;
+			} catch { }
+		}
+
+		return true;
 	}
 }

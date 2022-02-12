@@ -46,7 +46,7 @@ namespace Turtle {
 				$"[Better luck next time. The word was {this.Solution}.]";
 			gameMessage.Formats.Add (new Regex ("[\\[\\]]"), new Format (
 					faint: true
-				)) ;
+				));
 			gameMessage.Draw (offset.X, height + 1);
 
 			return hasWon ? turn - 1 : -1;
@@ -78,9 +78,10 @@ namespace Turtle {
 
 		public int DrawStyledTurtle (Offset offset)
 		{
+			var author = this.currentGenerator.Author.Length < 34 ? this.currentGenerator.Author :
+				this.currentGenerator.Author.Substring (0, 34);
 			FormattedString turtle = VARS.TITLE
-				.Replace ("{author}",
-					this.currentGenerator.Author + new string(' ', 36 - this.currentGenerator.Author.Length))
+				.Replace ("{author}", author + new string (' ', 36 - author.Length))
 				.Replace ("{generator}", this.currentGenerator.Name);
 
 			turtle.Formats.Add (new Regex ("(?<![a-zA-Z(:/)])[\\\\/|]"), new Format (
@@ -101,7 +102,7 @@ namespace Turtle {
 			return VARS.TITLE.Split (Environment.NewLine).Length;
 		}
 
-		public string GetGameStateResult(int turn)
+		public string GetGameStateResult (int turn)
 		{
 			var stateBuilder = new StringBuilder ();
 			var finalTurn = turn == -1 ? "X" : turn.ToString ();
