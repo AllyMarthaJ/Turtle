@@ -28,7 +28,8 @@ namespace Turtle.Env
 		internal static Color DEFAULT_FORE = Color.Parse (TerminalMode.Foreground, Environment.GetEnvironmentVariable ("DEFAULT_FORE") ?? "legacy(White)");
 
 		// fetch repo
-		internal static string[] REPO = new [] { Environment.GetEnvironmentVariable ("REPO") ?? "https://raw.githubusercontent.com/AllyMarthaJ/OpenTurtleGenerators/master/generators.json" };
+		internal static string[] REPO = Environment.GetEnvironmentVariable ("REPO")?.Split(";") ??
+			new [] { "https://raw.githubusercontent.com/AllyMarthaJ/OpenTurtleGenerators/master/generators.json" };
 		internal static bool STORE_GENERATOR = bool.Parse (Environment.GetEnvironmentVariable ("STORE_GENERATOR") ?? "true");
 		// game data
 		internal static string GAME = Environment.GetEnvironmentVariable ("GAME") ?? "example";
