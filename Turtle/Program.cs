@@ -87,10 +87,8 @@ public class Program {
 
 			if (VARS.SHOW_TITLE)
 				verticalIncrement += game.DrawStyledTurtle (new Offset (1, verticalIncrement)) + 1;
-			if (VARS.SHOW_KEYBOARD)
-				verticalIncrement += game.DrawKeyboard (new Offset (1, verticalIncrement)) + 1;
 
-			var gameResult = game.Play (new Offset (2, verticalIncrement));
+			var gameResult = game.Play (new Offset (1, verticalIncrement));
 
 			// game's finished, let the person relish in their win/loss
 			Console.ReadKey (true);
