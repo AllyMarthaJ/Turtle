@@ -25,6 +25,8 @@ public class Program {
 	/// <param name="StoreGenerator">Whether or not to save named fetched games.</param>
 	/// <param name="Game">The name of the generator to use/game to play.</param>
 	/// <param name="Seed">The seed to use. 0 for today's.</param>
+	/// <param name="ListGames">Lists all games from given repositories.</param>
+	/// <param name="FetchGame">Fetches game information by name.</param>
 	/// <returns></returns>
 	public static async Task Main (string? AnsiPrefix = null,
 				       int? BlockWidth = null,
@@ -143,7 +145,7 @@ public class Program {
 					Console.WriteLine ($"{game.Key}, {game.Value}");
 				}
 				return false;
-			} catch { }
+			} catch { return false; }
 		}
 
 		if (FetchGame != null) {
@@ -157,7 +159,7 @@ public class Program {
 				Console.WriteLine ("Author   : " + generator.Author);
 
 				return false;
-			} catch { }
+			} catch { return false; }
 		}
 
 		return true;
