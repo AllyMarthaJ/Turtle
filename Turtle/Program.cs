@@ -40,7 +40,7 @@ public class Program {
 				       string? GoodCharFore = null,
 				       string? DefaultBack = null,
 				       string? DefaultFore = null,
-				       string? Repo = null,
+				       string[]? Repo = null,
 				       bool? StoreGenerator = null,
 				       string? Game = null,
 				       int? Seed = null,
@@ -118,7 +118,7 @@ public class Program {
 						   string? GoodCharFore = null,
 						   string? DefaultBack = null,
 						   string? DefaultFore = null,
-						   string? Repo = null,
+						   string[]? Repo = null,
 						   bool? StoreGenerator = null,
 						   string? Game = null,
 						   int? Seed = null,
@@ -139,7 +139,7 @@ public class Program {
 
 		if (ListGames) {
 			try {
-				foreach (var game in await gf.FetchRepository ()) {
+				foreach (var game in await gf.FetchRepositories ()) {
 					Console.WriteLine ($"{game.Key}, {game.Value}");
 				}
 				return false;
