@@ -48,7 +48,7 @@ namespace Turtle {
 			var hints = this.CompareUpstream (input);
 
 			// hardmode validation
-			if (this.HardMode && !UpdateWithHardmode (input, hints)) {
+			if (!UpdateWithHardmode (input, hints)) {
 				return Array.Empty<CharHint> ();
 			}
 
@@ -94,13 +94,15 @@ namespace Turtle {
 			// validation on hardmode
 			// NOTE: **we used to have an equivalent deny list**
 			// reasons we don't do this: tracking duplicate letters, tracking duplicate inputs.
-			for (int i = 0; i < hints.Length; i++) {
-				if (this.GoodPositions [i] != '\0' && this.GoodPositions [i] != hints [i].Entry)
-					return false;
-
-				foreach (var l in this.MustContain) {
-					if (!input.Contains (l))
+			if (this.HardMode) {
+				for (int i = 0; i < hints.Length; i++) {
+					if (this.GoodPositions [i] != '\0' && this.GoodPositions [i] != hints [i].Entry)
 						return false;
+
+					foreach (var l in this.MustContain) {
+						if (!input.Contains (l))
+							return false;
+					}
 				}
 			}
 

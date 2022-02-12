@@ -21,7 +21,10 @@ namespace Turtle {
 			bool hasWon = false;
 
 			// render
-			int height = drawGrid (turn, String.Empty, offset);
+			int keyboardOffset = VARS.SHOW_KEYBOARD ? drawKeyboard (offset) + 1: 0;
+			var finalOffset = new Offset (offset.X, offset.Y + keyboardOffset);
+
+			int height = drawGrid (turn, String.Empty, finalOffset);
 
 			while (turn <= currentGenerator.MaxTurns && !hasWon) {
 				// handle character input
@@ -35,7 +38,8 @@ namespace Turtle {
 					hasWon = result.hasWon;
 
 					// render
-					drawGrid (turn, wordBuilder.ToString (), offset);
+					height = VARS.SHOW_KEYBOARD ? drawKeyboard (offset) : 0;
+					drawGrid (turn, wordBuilder.ToString (), finalOffset);
 				}
 
 				turn++;
@@ -52,14 +56,11 @@ namespace Turtle {
 			return hasWon ? turn - 1 : -1;
 		}
 
-		public int DrawKeyboard (Offset offset)
+		private int drawKeyboard (Offset offset)
 		{
 			var rows = this.currentGenerator.Keys.Select (k => k.rowNum).Distinct ().ToArray ();
 
 			FormattedString fmtKey = new ("Keys   :");
-			fmtKey.Formats.Add (new Regex ("[\\[\\]]"), new Format (
-					faint: true
-				));
 			fmtKey.Draw (offset.X, offset.Y);
 
 			for (int i = 0; i < rows.Length; i++) {
@@ -67,8 +68,23 @@ namespace Turtle {
 				var keys = this.currentGenerator.Keys.Where (k => k.rowNum == rows [i]).ToArray ();
 
 				for (int x = 0; x < keys.Length; x++) {
-					fmtKey.RawValue = $"[{keys [x].displayKey.ToString ()}]";
-					fmtKey.Draw (4 * x + offset.X + 10, rows [i] + offset.Y);
+					FormattedString key = $"{{{keys [x].displayKey.ToString ()}}}";
+					if (this.GoodPositions.Contains(keys[x].displayKey)) {
+						key.Formats.Add (new Regex("\\w"), new Format (
+							backgroundColor: VARS.GOOD_CHAR_BACK,
+							foregroundColor: VARS.GOOD_CHAR_FORE
+							));
+					} else if (this.MustContain.Contains (keys [x].displayKey)) {
+						key.Formats.Add (new Regex ("\\w"), new Format (
+							backgroundColor: VARS.BAD_POS_BACK,
+							foregroundColor: VARS.BAD_POS_FORE
+							));
+					}
+					key.Formats.Add (new Regex ("[{}]"), new Format (
+							faint: true
+						));
+
+					key.Draw (4 * x + offset.X + 10, rows [i] + offset.Y);
 				}
 			}
 
