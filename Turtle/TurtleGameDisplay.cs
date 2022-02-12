@@ -38,7 +38,7 @@ namespace Turtle {
 					hasWon = result.hasWon;
 
 					// render
-					height = VARS.SHOW_KEYBOARD ? drawKeyboard (offset) : 0;
+					keyboardOffset = VARS.SHOW_KEYBOARD ? drawKeyboard (offset) : 0;
 					drawGrid (turn, wordBuilder.ToString (), finalOffset);
 				}
 
