@@ -79,6 +79,11 @@ namespace Turtle {
 							backgroundColor: VARS.BAD_POS_BACK,
 							foregroundColor: VARS.BAD_POS_FORE
 							));
+					} else if (this.NeverContains.Contains(keys[x].displayKey)) {
+						key.Formats.Add (new Regex ("\\w"), new Format (
+							backgroundColor: VARS.BAD_CHAR_BACK,
+							foregroundColor: VARS.BAD_CHAR_FORE
+							));
 					}
 					key.Formats.Add (new Regex ("[{}]"), new Format (
 							faint: true
