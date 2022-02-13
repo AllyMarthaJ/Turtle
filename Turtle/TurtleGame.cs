@@ -7,7 +7,12 @@ namespace Turtle {
 
 		public int Seed { get; }
 
-		public string Solution { get; }
+		/// <summary>
+		/// Solutions works as follows: The primary solution, Solutions [0],
+		/// gives information about hinting and so forth. The remainder of these
+		/// are simply accepted solutions in the game winning logic.
+		/// </summary>
+		public string [] Solutions { get; }
 
 		public bool HardMode { get; set; }
 
@@ -18,7 +23,7 @@ namespace Turtle {
 		public CharHint [] [] GameState { get; }
 
 		public TurtleGame (IGenerator generator, bool hard = false) :
-			this (generator, (int)(DateTime.Today.ToUniversalTime() - DateTime.UnixEpoch).TotalSeconds, hard)
+			this (generator, (int)(DateTime.Today.ToUniversalTime () - DateTime.UnixEpoch).TotalSeconds, hard)
 		{ }
 
 		public TurtleGame (IGenerator generator, int seed, bool hard = false)
@@ -26,19 +31,19 @@ namespace Turtle {
 			this.currentGenerator = generator;
 
 			this.Seed = seed;
-			this.Solution = this.currentGenerator.GenerateSolution (seed);
+			this.Solutions = this.currentGenerator.GenerateSolutions (seed);
 			this.HardMode = hard;
 
-			this.GoodPositions = new char [this.Solution.Length];
+			this.GoodPositions = new char [this.Solutions [0].Length];
 			this.MustContain = new List<char> ();
 			this.NeverContains = new List<char> ();
-			this.GameState = new CharHint [this.currentGenerator.MaxTurns][];
+			this.GameState = new CharHint [this.currentGenerator.MaxTurns] [];
 		}
 
 		public CharHint [] ValidateAndUpdateUpstream (string input)
 		{
 			// length validation
-			if (input.Length != this.Solution.Length) {
+			if (input.Length != this.Solutions [0].Length) {
 				return Array.Empty<CharHint> ();
 			}
 
@@ -59,18 +64,18 @@ namespace Turtle {
 
 		public CharHint [] CompareUpstream (string input)
 		{
-			if (input.Length != Solution.Length) {
+			if (input.Length != Solutions [0].Length) {
 				return Array.Empty<CharHint> ();
 			}
 
 			// a position-insensitive copy of our solution
-			var deductSolution = new List<char> (this.Solution);
+			var deductSolution = new List<char> (this.Solutions [0]);
 
 			// a position-sensitive record of our hints
-			var hints = new CharHint [this.Solution.Length];
+			var hints = new CharHint [this.Solutions [0].Length];
 
 			for (int i = 0; i < input.Length; i++) {
-				if (this.Solution [i] == input [i] && deductSolution.Contains (input [i])) {
+				if (this.Solutions [0] [i] == input [i] && deductSolution.Contains (input [i])) {
 					// 1. check equal position
 					// 2. going from left-to-right means we might have already
 					// used a letter but in the wrong place, so we don't want to give the impression

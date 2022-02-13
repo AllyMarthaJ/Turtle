@@ -18,7 +18,15 @@ namespace Turtle.Generators {
 		/// <returns>Returns all hints, 0 if invalid input.</returns>
 		public bool ValidateInput (string currentInput);
 
-		public string GenerateSolution (int seed);
+		public string GenerateSolution (int seed)
+		{
+			return GenerateSolutions (seed) [0];
+		}
+
+		public string [] GenerateSolutions (int seed)
+		{
+			return new [] { GenerateSolution(seed) };
+		}
 	}
 }
 

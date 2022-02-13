@@ -21,7 +21,7 @@ namespace Turtle {
 			bool hasWon = false;
 
 			// render
-			int keyboardOffset = VARS.SHOW_KEYBOARD ? drawKeyboard (offset) + 1: 0;
+			int keyboardOffset = VARS.SHOW_KEYBOARD ? drawKeyboard (offset) + 1 : 0;
 			var finalOffset = new Offset (offset.X, offset.Y + keyboardOffset);
 
 			int height = drawGrid (turn, String.Empty, finalOffset);
@@ -47,7 +47,7 @@ namespace Turtle {
 
 			FormattedString gameMessage = hasWon ?
 				"[Congratulations, you've won!]" :
-				$"[Better luck next time. The word was {this.Solution}.]";
+				$"[Better luck next time. The word was {this.Solutions [0]}.]";
 			gameMessage.Formats.Add (new Regex ("[\\[\\]]"), new Format (
 					faint: true
 				));
@@ -69,8 +69,8 @@ namespace Turtle {
 
 				for (int x = 0; x < keys.Length; x++) {
 					FormattedString key = $"{{{keys [x].displayKey.ToString ()}}}";
-					if (this.GoodPositions.Contains(keys[x].displayKey)) {
-						key.Formats.Add (new Regex("\\w"), new Format (
+					if (this.GoodPositions.Contains (keys [x].displayKey)) {
+						key.Formats.Add (new Regex ("\\w"), new Format (
 							backgroundColor: VARS.GOOD_CHAR_BACK,
 							foregroundColor: VARS.GOOD_CHAR_FORE
 							));
@@ -79,7 +79,7 @@ namespace Turtle {
 							backgroundColor: VARS.BAD_POS_BACK,
 							foregroundColor: VARS.BAD_POS_FORE
 							));
-					} else if (this.NeverContains.Contains(keys[x].displayKey)) {
+					} else if (this.NeverContains.Contains (keys [x].displayKey)) {
 						key.Formats.Add (new Regex ("\\w"), new Format (
 							backgroundColor: VARS.BAD_CHAR_BACK,
 							foregroundColor: VARS.BAD_CHAR_FORE
@@ -150,7 +150,7 @@ namespace Turtle {
 
 			// check if valid key
 			if (this.currentGenerator.Keys.Where (k => k.inputKey == input.Key).Count () > 0) {
-				if (wordBuilder.Length >= this.Solution.Length) {
+				if (wordBuilder.Length >= this.Solutions [0].Length) {
 					return (validWord, hasWon);
 				}
 
@@ -169,7 +169,7 @@ namespace Turtle {
 
 				if (wordResult.Length == 0) {
 					// only clear the buffer if we've written a full word
-					if (wordBuilder.Length != this.Solution.Length) {
+					if (wordBuilder.Length != this.Solutions [0].Length) {
 						return (validWord, hasWon);
 					}
 					wordBuilder.Clear ();
@@ -178,8 +178,15 @@ namespace Turtle {
 					// we've got a valid word!
 					validWord = true;
 
-					if (wordBuilder.ToString ().Equals (this.Solution, StringComparison.OrdinalIgnoreCase)) {
-						hasWon = true;
+					foreach (var solution in this.Solutions) {
+						if (wordBuilder.ToString ().Equals (solution, StringComparison.OrdinalIgnoreCase)) {
+							hasWon = true;
+						}
+					}
+
+					if (hasWon) {
+						// multiple solutions, switch to primary solution
+						wordResult = this.CompareUpstream (this.Solutions [0]);
 					}
 
 					// chuck the check in the gamestate
@@ -200,7 +207,7 @@ namespace Turtle {
 			emptyBlock.Formats.Add (new Regex (".*"), emptyBlockFormat);
 
 			for (int y = 0; y < this.currentGenerator.MaxTurns; y++) {
-				for (int x = 0; x < this.Solution.Length; x++) {
+				for (int x = 0; x < this.Solutions [0].Length; x++) {
 					int blockX = x * (VARS.BLOCK_WIDTH + 2) + stdOffset.X;
 					int blockY = y * (VARS.BLOCK_HEIGHT + 1) + stdOffset.Y;
 
