@@ -19,11 +19,11 @@ namespace Turtle.Env
 
 		// color scheme
 		internal static Color BAD_CHAR_BACK = Color.Parse (TerminalMode.Background, Environment.GetEnvironmentVariable ("BAD_CHAR_BACK") ?? "rgb6bit(5,3,3)");
-		internal static Color BAD_CHAR_FORE = Color.Parse (TerminalMode.Foreground, Environment.GetEnvironmentVariable ("BAD_CHAR_FORE") ?? "legacy(Black)");
+		internal static Color BAD_CHAR_FORE = Color.Parse (TerminalMode.Foreground, Environment.GetEnvironmentVariable ("BAD_CHAR_FORE") ?? "gray(0)");
 		internal static Color BAD_POS_BACK = Color.Parse (TerminalMode.Background, Environment.GetEnvironmentVariable ("BAD_POS_BACK") ?? "rgb6bit(5,4,2)");
-		internal static Color BAD_POS_FORE = Color.Parse (TerminalMode.Foreground, Environment.GetEnvironmentVariable ("BAD_POS_FORE") ?? "legacy(Black)");
+		internal static Color BAD_POS_FORE = Color.Parse (TerminalMode.Foreground, Environment.GetEnvironmentVariable ("BAD_POS_FORE") ?? "gray(0)");
 		internal static Color GOOD_CHAR_BACK = Color.Parse (TerminalMode.Background, Environment.GetEnvironmentVariable ("GOOD_CHAR_BACK") ?? "rgb6bit(3,4,1)");
-		internal static Color GOOD_CHAR_FORE = Color.Parse (TerminalMode.Foreground, Environment.GetEnvironmentVariable ("GOOD_CHAR_FORE") ?? "legacy(Black)");
+		internal static Color GOOD_CHAR_FORE = Color.Parse (TerminalMode.Foreground, Environment.GetEnvironmentVariable ("GOOD_CHAR_FORE") ?? "gray(0)");
 		internal static Color DEFAULT_BACK = Color.Parse (TerminalMode.Background, Environment.GetEnvironmentVariable ("DEFAULT_BACK") ?? "gray(4)");
 		internal static Color DEFAULT_FORE = Color.Parse (TerminalMode.Foreground, Environment.GetEnvironmentVariable ("DEFAULT_FORE") ?? "legacy(BrightWhite)");
 
