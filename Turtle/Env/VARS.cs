@@ -25,7 +25,7 @@ namespace Turtle.Env
 		internal static Color GOOD_CHAR_BACK = Color.Parse (TerminalMode.Background, Environment.GetEnvironmentVariable ("GOOD_CHAR_BACK") ?? "rgb6bit(3,4,1)");
 		internal static Color GOOD_CHAR_FORE = Color.Parse (TerminalMode.Foreground, Environment.GetEnvironmentVariable ("GOOD_CHAR_FORE") ?? "legacy(Black)");
 		internal static Color DEFAULT_BACK = Color.Parse (TerminalMode.Background, Environment.GetEnvironmentVariable ("DEFAULT_BACK") ?? "gray(4)");
-		internal static Color DEFAULT_FORE = Color.Parse (TerminalMode.Foreground, Environment.GetEnvironmentVariable ("DEFAULT_FORE") ?? "legacy(White)");
+		internal static Color DEFAULT_FORE = Color.Parse (TerminalMode.Foreground, Environment.GetEnvironmentVariable ("DEFAULT_FORE") ?? "legacy(BrightWhite)");
 
 		// fetch repo
 		internal static string[] REPO = Environment.GetEnvironmentVariable ("REPO")?.Split(";") ??
@@ -78,13 +78,13 @@ ASCII  :  http://www.figlet.org/              : also see Fonty2
 			HARD_MODE = HardMode ?? HARD_MODE;
 
 			BAD_CHAR_BACK = BadCharBack == null ? BAD_CHAR_BACK : Color.Parse (TerminalMode.Background, BadCharBack);
-			BAD_CHAR_FORE = BadCharFore == null ? BAD_CHAR_FORE : Color.Parse (TerminalMode.Background, BadCharFore);
+			BAD_CHAR_FORE = BadCharFore == null ? BAD_CHAR_FORE : Color.Parse (TerminalMode.Foreground, BadCharFore);
 			BAD_POS_BACK = BadPosBack == null ? BAD_POS_BACK : Color.Parse (TerminalMode.Background, BadPosBack);
-			BAD_POS_FORE = BadPosFore == null ? BAD_POS_FORE : Color.Parse (TerminalMode.Background, BadPosFore);
+			BAD_POS_FORE = BadPosFore == null ? BAD_POS_FORE : Color.Parse (TerminalMode.Foreground, BadPosFore);
 			GOOD_CHAR_BACK = GoodCharBack == null ? GOOD_CHAR_BACK : Color.Parse (TerminalMode.Background, GoodCharBack);
-			GOOD_CHAR_FORE = GoodCharFore == null ? GOOD_CHAR_FORE : Color.Parse (TerminalMode.Background, GoodCharFore);
+			GOOD_CHAR_FORE = GoodCharFore == null ? GOOD_CHAR_FORE : Color.Parse (TerminalMode.Foreground, GoodCharFore);
 			DEFAULT_BACK = DefaultBack == null ? DEFAULT_BACK : Color.Parse (TerminalMode.Background, DefaultBack);
-			DEFAULT_FORE = DefaultFore == null ? DEFAULT_FORE : Color.Parse (TerminalMode.Background, DefaultFore);
+			DEFAULT_FORE = DefaultFore == null ? DEFAULT_FORE : Color.Parse (TerminalMode.Foreground, DefaultFore);
 
 			REPO = Repo ?? REPO;
 			STORE_GENERATOR = StoreGenerator ?? STORE_GENERATOR;
