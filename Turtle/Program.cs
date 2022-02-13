@@ -97,6 +97,8 @@ public class Program {
 			ConsoleHelpers.AlternateScreen = false;
 			Console.WriteLine (game.GetGameStateResult (gameResult));
 		} catch (Exception ex) {
+			ConsoleHelpers.AlternateScreen = false;
+
 			Console.WriteLine ("Whoops! Something went wrong. Here's some information for you:");
 			Console.WriteLine ("Message: " + ex.Message);
 			Console.WriteLine ("More details: " + ex.InnerException ?? "None available.");

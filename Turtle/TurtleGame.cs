@@ -14,6 +14,7 @@ namespace Turtle {
 		// gamestate
 		public char [] GoodPositions { get; }
 		public List<char> MustContain { get; }
+		public List<char> NeverContains { get; }
 		public CharHint [] [] GameState { get; }
 
 		public TurtleGame (IGenerator generator, bool hard = false) :
@@ -30,6 +31,7 @@ namespace Turtle {
 
 			this.GoodPositions = new char [this.Solution.Length];
 			this.MustContain = new List<char> ();
+			this.NeverContains = new List<char> ();
 			this.GameState = new CharHint [this.currentGenerator.MaxTurns][];
 		}
 
@@ -115,6 +117,10 @@ namespace Turtle {
 					break;
 				case HintMode.GoodPosition:
 					this.GoodPositions [i] = hints [i].Entry;
+					break;
+				case HintMode.BadCharacter:
+					if (!this.NeverContains.Contains (hints [i].Entry))
+						this.NeverContains.Add (hints [i].Entry);
 					break;
 				}
 			}
