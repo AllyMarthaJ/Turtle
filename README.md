@@ -40,7 +40,7 @@ GAME = "example" // The name of the generator to use/game to play. String.
 SEED = 0 // The seed to use. 0 for today's. Integer.
 ```
 
-Refer to this documentation for command line argument defaults.
+Refer to this documentation for command line argument defaults. Also use `./turtle --help` for arguments.
 
 ## Colours
 There is a set of colour syntaxes used to support a variety of terminals:
@@ -53,6 +53,11 @@ There is a set of colour syntaxes used to support a variety of terminals:
 For example, you could run a minimal `common` game with:
 ```
 SHOW_TITLE=false SHOW_KEYBOARD=false GAME=common ./turtle
+```
+
+One could also achieve the same thing using:
+```
+./turtle --show-title false --show-keyboard false --game common
 ```
 
 # Contributing to Generators!
