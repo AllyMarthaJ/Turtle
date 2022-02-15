@@ -42,7 +42,7 @@ public class Program {
 				       string? GoodCharFore = null,
 				       string? DefaultBack = null,
 				       string? DefaultFore = null,
-				       string[]? Repo = null,
+				       string []? Repo = null,
 				       bool? StoreGenerator = null,
 				       string? Game = null,
 				       int? Seed = null,
@@ -67,9 +67,11 @@ public class Program {
 		// setting up screen processing
 		int verticalIncrement = 1;
 		ConsoleHelpers.AlternateScreen = true;
+		ConsoleHelpers.CursorVisible = false;
 
 		AppDomain.CurrentDomain.ProcessExit += (o, e) => {
 			ConsoleHelpers.AlternateScreen = false;
+			ConsoleHelpers.CursorVisible = true;
 		};
 
 		IGenerator generator;
@@ -95,9 +97,11 @@ public class Program {
 
 			// return to normal and print out an emoji friendly result
 			ConsoleHelpers.AlternateScreen = false;
+			ConsoleHelpers.CursorVisible = true;
 			Console.WriteLine (game.GetGameStateResult (gameResult));
 		} catch (Exception ex) {
 			ConsoleHelpers.AlternateScreen = false;
+			ConsoleHelpers.CursorVisible = true;
 
 			Console.WriteLine ("Whoops! Something went wrong. Here's some information for you:");
 			Console.WriteLine ("Message: " + ex.Message);
@@ -120,7 +124,7 @@ public class Program {
 						   string? GoodCharFore = null,
 						   string? DefaultBack = null,
 						   string? DefaultFore = null,
-						   string[]? Repo = null,
+						   string []? Repo = null,
 						   bool? StoreGenerator = null,
 						   string? Game = null,
 						   int? Seed = null,

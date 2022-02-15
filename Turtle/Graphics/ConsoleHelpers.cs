@@ -5,6 +5,8 @@ using Turtle.Env;
 namespace Turtle.Graphics {
 	public static class ConsoleHelpers {
 		private static bool alternate = false;
+		private static bool cursorVisible = true;
+
 		public static bool AlternateScreen {
 			get {
 				return alternate;
@@ -17,6 +19,21 @@ namespace Turtle.Graphics {
 				Console.Write (sb.ToString ());
 
 				alternate = value;
+			}
+		}
+
+		public static bool CursorVisible {
+			get {
+				return cursorVisible;
+			}
+set {
+				StringBuilder sb = new ();
+				sb.Append (VARS.ANSI_PREFIX);
+				sb.Append ("?25");
+				sb.Append (value ? "h" : "l");
+				Console.Write (sb.ToString ());
+
+				cursorVisible = value;
 			}
 		}
 
